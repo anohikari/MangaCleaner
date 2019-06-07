@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Diagnostics;
 
 namespace ImageHandler.Klassen
 {
     public class SpeechBubble
     {
-        static Color MARKED = Color.DarkOrchid;
+        static Color MARKED = Color.Pink;
         public static MyImages Status;
         public static LockBitmap Images;            //currentImages
         static List<SpeechBubble> Bubbles;
@@ -23,9 +18,11 @@ namespace ImageHandler.Klassen
 
         public void MarkBubble(Point p)
         {
+            Images.LockBits();
+            Status.result.LockBits();
             size++;
             MarkPoint(p);
-            while(RegionBoundary.Count > 0)
+            while (RegionBoundary.Count > 0)
             {
                 size++;
                 if (size > Constants.BUBBLE_MAX_SIZE)
@@ -34,6 +31,8 @@ namespace ImageHandler.Klassen
                     MarkPoint(RegionBoundary.Dequeue());
             }
             DeleteText();
+            Images.UnlockBits();
+            Status.result.UnlockBits();
         }
         private void MarkPoint(Point p)
         {
@@ -101,7 +100,6 @@ namespace ImageHandler.Klassen
         public static void addBubble(int XInit, int YInit)
         {
             SpeechBubble sb = new SpeechBubble(XInit, YInit);
-            //SpeechBubble.Bubbles.Add(sb);
         }
 
         private void DeleteText()

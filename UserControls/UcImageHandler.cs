@@ -73,24 +73,24 @@ namespace ImageHandler
             else if (Images.CurrentImage != null)
             {
                 Klassen.SpeechBubble.Images = Images.CurrentImage;
-                Images.ChangeBuffer = Images.result.Clone() as Bitmap;
+                Images.ChangeBuffer = new LockBitmap(Images.result.source);
                 Klassen.SpeechBubble.addBubble((int) ((double)e.X / ScalingFactor), (int)((double)e.Y / ScalingFactor));
-                setImage(Images.result);
+                setImage(Images.result.source);
             }
         }
 
         private void BtnConfirm_Click(object sender, EventArgs e)
         {
             if (Images.LowerBound != 0 && Images.UpperBound != 0)
-                Images.result = Images.level(Images.result);
-            setImage(Images.result);
+                Images.result = Images.level(Images.result.source);
+            setImage(Images.result.source);
         }
 
 
         private void CmdUndo_Click(object sender, EventArgs e)
         {
             Images.result = Images.ChangeBuffer;
-            setImage(Images.result);
+            setImage(Images.result.source);
             Klassen.SpeechBubble.Images = Images.CurrentImage;
         }
 
@@ -99,7 +99,7 @@ namespace ImageHandler
             try
             {
                 Images.Init(openFileDialog.FileName);
-                PbDisplay.Image = Images.result;
+                PbDisplay.Image = Images.result.source;
             }
             catch (Exception)
             {
@@ -110,12 +110,12 @@ namespace ImageHandler
         private void CmdNextImage_Click(object sender, EventArgs e)
         {
             Images.LoadNextimageFromBuffer();
-            setImage(Images.CurrentImage.source);
+            setImage(Images.result.source);
         }
 
         public void setImage(Bitmap image)
         {
-            Bitmap b = image;
+            Bitmap b = new Bitmap(image);
             ScalingFactor = Math.Max(PbDisplay.Height / (double)image.Height, PbDisplay.Width / (double)image.Width);
             int newWidth = (int)(image.Width * ScalingFactor);
             int newHeight = (int)(image.Height * ScalingFactor);

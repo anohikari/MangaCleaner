@@ -11,8 +11,8 @@ namespace ImageHandler
         ImageBuffer SaveLoad;
 
         public LockBitmap CurrentImage;         // preprocessed Image
-        public Bitmap ChangeBuffer;         
-        public Bitmap result;               // Latest WIP
+        public LockBitmap ChangeBuffer;         
+        public LockBitmap result;               // Latest WIP
 
         public byte LowerBound = 0;
         public byte UpperBound = 0;
@@ -20,8 +20,9 @@ namespace ImageHandler
 
         public void Init(string dir)
         {
-            ChangeBuffer = new Bitmap(dir);
-            result = new Bitmap(ChangeBuffer);     // result = new bitmap
+            Bitmap toLock = new Bitmap(dir);
+            ChangeBuffer = new LockBitmap(new Bitmap(toLock));
+            result = new LockBitmap(new Bitmap(toLock));     // result = new bitmap
             SaveLoad = new ImageBuffer(this, dir);
             Task task = new Task(SaveLoad.FillBuffer);
             task.Start();
@@ -30,10 +31,16 @@ namespace ImageHandler
         }
         public void LoadNextimageFromBuffer()
         {
-            SaveLoad.Save(result);
+            SaveLoad.Save(result.source);
             while(SaveLoad.current_buffersize == 0) { }
-            result = ChangeBuffer = new Bitmap(SaveLoad.getNextFile());
+            Bitmap toLock = new Bitmap(SaveLoad.getNextFile());
+            ChangeBuffer = new LockBitmap(new Bitmap(toLock));
+            result = new LockBitmap(new Bitmap(toLock));
             CurrentImage = SaveLoad.getNextImage();
+            
+            //Bitmap buffer = new Bitmap(SaveLoad.getNextImage().source);
+            //result = ChangeBuffer = CurrentImage = new LockBitmap(new Bitmap(buffer));
+            ////result = ChangeBuffer = CurrentImage = SaveLoad.getNextImage();
         }
 
 
@@ -42,7 +49,7 @@ namespace ImageHandler
         /// </summary>
         /// <param name="AImage"></param>
         /// <returns></returns>
-        public  Bitmap level(Bitmap AImage)
+        public  LockBitmap level(Bitmap AImage)
         {
             byte r, g, b;
             int avg;
@@ -83,7 +90,7 @@ namespace ImageHandler
                 }
             }
             final.UnlockBits();
-            return final.source;
+            return final;
         }
 
 
