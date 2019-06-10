@@ -26,9 +26,15 @@ namespace ImageHandler.Klassen
             {
                 size++;
                 if (size > Constants.BUBBLE_MAX_SIZE)
+                {
+                    Images.UnlockBits();
+                    Status.result.UnlockBits();
                     return;
+                }
                 if (2 < RegionBoundary.Peek().X && RegionBoundary.Peek().X < Images.Width - 2 && 2 < RegionBoundary.Peek().Y && RegionBoundary.Peek().Y < Images.Height - 2)     //check inbounds
                     MarkPoint(RegionBoundary.Dequeue());
+                else
+                    RegionBoundary.Dequeue();
             }
             DeleteText();
             Images.UnlockBits();

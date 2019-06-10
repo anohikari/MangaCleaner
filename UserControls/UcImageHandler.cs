@@ -35,7 +35,7 @@ namespace ImageHandler
             try
             {
                 Images.Init(openFileDialog.FileName);
-                setImage(Images.CurrentImage.source);
+                setImage(Images.result.source);
             }
             catch (Exception) { }       // replace this by proper checks later
             
