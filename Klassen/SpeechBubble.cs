@@ -3,44 +3,59 @@ using System.Drawing;
 
 namespace ImageHandler.Klassen
 {
+    /// <summary>
+    /// Implements functions for marking and cleaning textbubbles
+    /// </summary>
     public class SpeechBubble
     {
-        static Color MARKED = Color.Pink;
-        public static MyImages Status;
-        public static LockBitmap Images;            //currentImages
-        static List<SpeechBubble> Bubbles;
+        public static ImageHandler ImageHandler;
+        public static LockBitmap CurrentImage;   
+        private Point InitPoint;
 
         public int XMin, YMin = 10000;
         int XMax, YMax = 0;
-        int size = 0;
+        int Size = 0;
         Queue<Point> RegionBoundary = new Queue<Point>();
-        Queue<Point> Text = new Queue<Point>();
+        Queue<Point> RegionTextPoints = new Queue<Point>();
 
-        public void MarkBubble(Point p)
+        public SpeechBubble(int XInit, int YInit)
         {
-            Images.LockBits();
-            Status.result.LockBits();
-            size++;
-            MarkPoint(p);
+            InitPoint = new Point(XInit, YInit);
+            CurrentImage = ImageHandler.CurrentImage;
+        }
+        public void CleanBubble()
+        {
+            CurrentImage.LockBits();
+            ImageHandler.ResultImage.LockBits();
+            Size++;
+            ExtendRegion(InitPoint);
             while (RegionBoundary.Count > 0)
             {
-                size++;
-                if (size > Constants.BUBBLE_MAX_SIZE)
+                Size++;
+                if (Size > Constants.BUBBLE_MAX_SIZE)
                 {
-                    Images.UnlockBits();
-                    Status.result.UnlockBits();
+                    CurrentImage.UnlockBits();
+                    ImageHandler.ResultImage.UnlockBits();
                     return;
                 }
-                if (2 < RegionBoundary.Peek().X && RegionBoundary.Peek().X < Images.Width - 2 && 2 < RegionBoundary.Peek().Y && RegionBoundary.Peek().Y < Images.Height - 2)     //check inbounds
-                    MarkPoint(RegionBoundary.Dequeue());
+                if (CheckInbounds())   
+                    ExtendRegion(RegionBoundary.Dequeue());
                 else
                     RegionBoundary.Dequeue();
             }
             DeleteText();
-            Images.UnlockBits();
-            Status.result.UnlockBits();
+            CurrentImage.UnlockBits();
+            ImageHandler.ResultImage.UnlockBits();
         }
-        private void MarkPoint(Point p)
+        private bool CheckInbounds()
+        {
+            return     (2 < RegionBoundary.Peek().X 
+                     && RegionBoundary.Peek().X < CurrentImage.Width - 2 
+                     && 2 < RegionBoundary.Peek().Y 
+                     && RegionBoundary.Peek().Y < CurrentImage.Height - 2);
+        }
+
+        private void ExtendRegion(Point p)
         {
             if (p.X > XMax)
                 XMax = p.X;
@@ -52,89 +67,58 @@ namespace ImageHandler.Klassen
                 YMin = p.Y;
             
 
-            Images.SetPixel(p.X, p.Y, MARKED);
-            if (Images.GetPixel(p.X + 1, p.Y).G == 255)
+            CurrentImage.SetPixel(p.X, p.Y, Constants.MARKED);
+            foreach (Point AdjacentPixel in getNeighbourPixels(p))
             {
-                RegionBoundary.Enqueue(new Point(p.X + 1, p.Y));
-                Images.SetPixel(p.X + 1, p.Y, MARKED);
-                Status.result.SetPixel(p.X + 1, p.Y, Color.White);
+                if (CurrentImage.GetPixel(AdjacentPixel.X, AdjacentPixel.Y).G == 255)
+                {
+                    RegionBoundary.Enqueue(AdjacentPixel);
+                    CurrentImage.SetPixel(AdjacentPixel.X, AdjacentPixel.Y, Constants.MARKED);
+                    ImageHandler.ResultImage.SetPixel(AdjacentPixel.X, AdjacentPixel.Y, Color.White);
+                }
+                if (CurrentImage.GetPixel(AdjacentPixel.X, AdjacentPixel.Y).G == 0)
+                {
+                    RegionTextPoints.Enqueue(AdjacentPixel);
+                }
             }
-            if (Images.GetPixel(p.X - 1, p.Y).G == 255)
-            {
-                RegionBoundary.Enqueue(new Point(p.X - 1, p.Y));
-                Images.SetPixel(p.X - 1, p.Y, MARKED);
-                Status.result.SetPixel(p.X - 1, p.Y, Color.White);
-            }
-            if (Images.GetPixel(p.X, p.Y + 1).G == 255)
-            {
-                RegionBoundary.Enqueue(new Point(p.X, p.Y + 1));
-                Images.SetPixel(p.X, p.Y + 1, MARKED);
-                Status.result.SetPixel(p.X, p.Y + 1, Color.White);
-            }
-            if (Images.GetPixel(p.X, p.Y - 1).G == 255)
-            {
-                RegionBoundary.Enqueue(new Point(p.X, p.Y - 1));
-                Images.SetPixel(p.X, p.Y - 1, MARKED);
-                Status.result.SetPixel(p.X, p.Y - 1, Color.White);
-            }
-
-            if (Images.GetPixel(p.X + 1, p.Y).G == 0)
-            {
-                Text.Enqueue(new Point(p.X + 1, p.Y));
-            }
-            if (Images.GetPixel(p.X - 1, p.Y).G == 0)
-            {
-                Text.Enqueue(new Point(p.X - 1, p.Y));
-            }
-            if (Images.GetPixel(p.X, p.Y + 1).G == 0)
-            {
-                Text.Enqueue(new Point(p.X, p.Y + 1));
-            }
-            if (Images.GetPixel(p.X, p.Y - 1).G == 0)
-            {
-                Text.Enqueue(new Point(p.X, p.Y - 1));
-            }
-
 
         }
-        public SpeechBubble(int XInit, int YInit)
-        {
-            Point p = new Point(XInit, YInit);
-            MarkBubble(p);
-
-        }
-        public static void addBubble(int XInit, int YInit)
-        {
-            SpeechBubble sb = new SpeechBubble(XInit, YInit);
+        List<Point> getNeighbourPixels(Point p) {
+            List<Point> Neighbours = new List<Point>();
+            Neighbours.Add(new Point(p.X + 1, p.Y));
+            Neighbours.Add(new Point(p.X - 1, p.Y));
+            Neighbours.Add(new Point(p.X, p.Y + 1));
+            Neighbours.Add(new Point(p.X, p.Y - 1));
+            return Neighbours;
         }
 
         private void DeleteText()
         {
             Point p = new Point();
-            while(Text.Count > 0)
+            while(RegionTextPoints.Count > 0)
             {
-                p = Text.Dequeue();
+                p = RegionTextPoints.Dequeue();
                 if (!CheckCorner(p))
                 {
                     for (int i = 0; p.X + i < XMax; i++)
                     {
-                        if (Images.GetPixel(p.X + i, p.Y).G == MARKED.G)
+                        if (CurrentImage.GetPixel(p.X + i, p.Y).G == Constants.MARKED.G)
                         {
                             for (int j = 0; j <= i; j++)
                             {
-                                Status.result.SetPixel(p.X + j, p.Y, Color.White);
+                                ImageHandler.ResultImage.SetPixel(p.X + j, p.Y, Color.White);
                             }
-                            i = Images.Width;
+                            i = CurrentImage.Width;
                         }
-                        if (p.X + i > Images.Width - 3)
-                            i = Images.Width;
+                        if (p.X + i > CurrentImage.Width - 3)
+                            i = CurrentImage.Width;
                     }
                 }
             }
             
         }
         /// <summary>
-        /// Check if the given (black) pixel belongs to the outer bound
+        /// Returns false if Pixel can be painted over. Check if the given (black) pixel belongs to the outer bound.
         /// </summary>
         /// <param name="p"></param>
         /// <returns></returns>
@@ -144,17 +128,15 @@ namespace ImageHandler.Klassen
             up = down = left = right = UpRight = DownRight = false;
             for (int i = 0; i < Constants.CORNER_CHECK_LIMIT; i++)
             {
-                if (p.X + i < Images.Width && Images.GetPixel(p.X + i, p.Y).G == MARKED.G)
+                if (p.X + i < CurrentImage.Width && CurrentImage.GetPixel(p.X + i, p.Y).G == Constants.MARKED.G)
                     right = true;
-                //if (p.X - i > 0 && Images.GetPixel(p.X - i, p.Y).G == MARKED.G)
-                //    left = true;
-                if (p.Y + i < Images.Height && Images.GetPixel(p.X, p.Y + i).G == MARKED.G)
+                if (p.Y + i < CurrentImage.Height && CurrentImage.GetPixel(p.X, p.Y + i).G == Constants.MARKED.G)
                     up = true;
-                if (p.Y - i > 0 && Images.GetPixel(p.X, p.Y - i).G == MARKED.G)
+                if (p.Y - i > 0 && CurrentImage.GetPixel(p.X, p.Y - i).G == Constants.MARKED.G)
                     down = true;
-                if (p.Y + i < Images.Height && Images.GetPixel(p.X + i, p.Y + i).G == MARKED.G)
+                if (p.Y + i < CurrentImage.Height && CurrentImage.GetPixel(p.X + i, p.Y + i).G == Constants.MARKED.G)
                     UpRight = true;
-                if (p.Y - i > 0 && Images.GetPixel(p.X + i, p.Y - i).G == MARKED.G)
+                if (p.Y - i > 0 && CurrentImage.GetPixel(p.X + i, p.Y - i).G == Constants.MARKED.G)
                     DownRight = true;
 
 

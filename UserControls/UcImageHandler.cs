@@ -1,28 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
 using System.IO;
 //using ImageProcessor;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using ImageHandler.Klassen;
 
 namespace ImageHandler
 {
     public partial class UcImageHandler : UserControl
     {
-        private MyImages Images = new MyImages();
+        private ImageHandler ImageHandler = new ImageHandler();
         double ScalingFactor = 1;
 
         public UcImageHandler()
         {
             InitializeComponent();
             LblDarkest.Visible = LblBrightest.Visible = CmdStartLevel.Visible = false;
-            Klassen.SpeechBubble.Status = Images;
-            ImageBuffer.images = Images;
+            SpeechBubble.ImageHandler = ImageHandler;
+            ImageBuffer.ImageHandler = ImageHandler;
         }
 
         private void loadDataToolStripMenuItem_Click(object sender, EventArgs e)
@@ -32,98 +27,117 @@ namespace ImageHandler
             {
                 Directory.SetCurrentDirectory(Path.GetDirectoryName(openFileDialog.FileName));
             }
-            try
+            if (result == DialogResult.OK)
             {
-                Images.Init(openFileDialog.FileName);
-                setImage(Images.result.source);
+                try
+                {
+                    ImageHandler.Init(openFileDialog.FileName);
+                    setImage(ImageHandler.ResultImage.source);
+                }
+                catch (Exception) { }       // TODO: Output an error 
             }
-            catch (Exception) { }       // replace this by proper checks later
-            
         }
-
 
         private void Level_CheckedChanged(object sender, EventArgs e)
         {
             if (Level.Checked)
             {
+                ImageHandler.ResultImage.LockBits();
                 LblDarkest.Visible = LblBrightest.Visible = CmdStartLevel.Visible = true;
             }
             else
             {
+                ImageHandler.ResultImage.UnlockBits();
                 LblDarkest.Visible = LblBrightest.Visible = CmdStartLevel.Visible = false;
             }
         }
 
         private void PbDisplay_MouseClick(object sender, MouseEventArgs e)
         {
-            if (Level.Checked)
+            if (Level.Checked && ImageHandler.CurrentImage != null)
             {
                 if (e.Button == MouseButtons.Left)
                 {
-                    Images.LowerBound = Convert.ToByte(Images.result.GetPixel((int)(e.X / ScalingFactor), (int)(e.Y / ScalingFactor)).GetBrightness() * 255);
-                    LblDarkest.Text = "Lower Brightness Threshhold:\n" + Images.LowerBound.ToString();
+                    ImageHandler.LowerBound = Convert.ToByte(ImageHandler.ResultImage.GetPixel((int)(e.X / ScalingFactor), (int)(e.Y / ScalingFactor)).GetBrightness() * 255);
+                    LblDarkest.Text = "Lower Brightness Threshhold:\n" + ImageHandler.LowerBound.ToString();
 
                 }
                 if (e.Button == MouseButtons.Right)
                 {
-                    Images.UpperBound = Convert.ToByte(Images.result.GetPixel((int)(e.X / ScalingFactor), (int)(e.Y / ScalingFactor)).GetBrightness() * 255);
-                    LblBrightest.Text = "Upper Brightness Threshhold:\n" + Images.UpperBound.ToString();
+                    ImageHandler.UpperBound = Convert.ToByte(ImageHandler.ResultImage.GetPixel((int)(e.X / ScalingFactor), (int)(e.Y / ScalingFactor)).GetBrightness() * 255);
+                    LblBrightest.Text = "Upper Brightness Threshhold:\n" + ImageHandler.UpperBound.ToString();
                 }
             }
-            else if (Images.CurrentImage != null)
+            else if (ImageHandler.CurrentImage != null)
             {
-                Klassen.SpeechBubble.Images = Images.CurrentImage;
-                Images.ChangeBuffer = new LockBitmap(Images.result.source);
-                Klassen.SpeechBubble.addBubble((int) ((double)e.X / ScalingFactor), (int)((double)e.Y / ScalingFactor));
-                setImage(Images.result.source);
+                ImageHandler.ChangeBuffer = new LockBitmap(ImageHandler.ResultImage.source);
+                SpeechBubble newBubble = new SpeechBubble((int) ((double)e.X / ScalingFactor), (int)((double)e.Y / ScalingFactor));
+                newBubble.CleanBubble();
+                setImage(ImageHandler.ResultImage.source);
             }
         }
 
         private void BtnConfirm_Click(object sender, EventArgs e)
         {
-            if (Images.LowerBound != 0 && Images.UpperBound != 0)
-                Images.result = Images.level(Images.result.source);
-            setImage(Images.result.source);
+            if (ImageHandler.LowerBound != 0 && ImageHandler.UpperBound != 0)
+            {
+                ImageHandler.Level();
+            }
+            Level.Checked = false;
+            setImage(ImageHandler.ResultImage.source);
         }
 
 
         private void CmdUndo_Click(object sender, EventArgs e)
         {
-            Images.result = Images.ChangeBuffer;
-            setImage(Images.result.source);
-            Klassen.SpeechBubble.Images = Images.CurrentImage;
+            ImageHandler.ResultImage = ImageHandler.ChangeBuffer;
+            setImage(ImageHandler.ResultImage.source);
+            SpeechBubble.CurrentImage = ImageHandler.CurrentImage;
         }
 
         private void CmdReload_Click(object sender, EventArgs e)
         {
-            try
-            {
-                Images.Init(openFileDialog.FileName);
-                PbDisplay.Image = Images.result.source;
-            }
-            catch (Exception)
-            {
-                return;
-            }
+            ImageHandler.Reload();
+            setImage(ImageHandler.ResultImage.source);
         }
 
         private void CmdNextImage_Click(object sender, EventArgs e)
         {
-            Images.LoadNextimageFromBuffer();
-            setImage(Images.result.source);
+            ImageHandler.LoadNextimageFromBuffer();
+            setImage(ImageHandler.ResultImage.source);
         }
 
         public void setImage(Bitmap image)
         {
-            Bitmap b = new Bitmap(image);
-            ScalingFactor = Math.Max(PbDisplay.Height / (double)image.Height, PbDisplay.Width / (double)image.Width);
+            Bitmap FormattedImage = new Bitmap(image);
+            ScalingFactor = Math.Min(PbDisplay.Height / (double)image.Height, PbDisplay.Width / (double)image.Width);
             int newWidth = (int)(image.Width * ScalingFactor);
             int newHeight = (int)(image.Height * ScalingFactor);
-            Size s = new Size(newWidth, newHeight);
-            Bitmap resized = new Bitmap(b, s);
-            PbDisplay.Image = resized;
+            Size Size = new Size(newWidth, newHeight);
+            Bitmap ResizedImage = new Bitmap(FormattedImage, Size);
+            PbDisplay.Image = ResizedImage;
 
         }
 
+        private void splitContainer1_Panel1_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+
+        }
+
+        private void splitContainer1_Panel1_DragDrop(object sender, DragEventArgs e)
+        {
+            String[] droppedFiles = (String[])e.Data.GetData(DataFormats.FileDrop);
+            Directory.SetCurrentDirectory(Path.GetDirectoryName(droppedFiles[0]));
+            ImageHandler.Init(droppedFiles[0]);
+            setImage(ImageHandler.ResultImage.source);
+        }
     }
 }

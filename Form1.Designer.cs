@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.PnlMain = new System.Windows.Forms.Panel();
-            this.ucImageHandler = new ImageHandler.UcImageHandler();
+            this.ucImageHandler = new global::ImageHandler.UcImageHandler();
             //this.PnlMain.ClientArea.SuspendLayout();
             this.PnlMain.SuspendLayout();
             this.SuspendLayout();
@@ -70,7 +70,7 @@
         #endregion
 
         private System.Windows.Forms.Panel PnlMain;
-        private ImageHandler.UcImageHandler ucImageHandler;
+        private global::ImageHandler.UcImageHandler ucImageHandler;
     }
 }
 

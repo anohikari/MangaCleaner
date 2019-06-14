@@ -53,7 +53,7 @@
     <Reference Include="UIAutomationTypes" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Klassen\BildBearbeiter.cs" />
+    <Compile Include="Klassen\ImageHandler.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -62,7 +62,7 @@
     </Compile>
     <Compile Include="Klassen\Constants.cs" />
     <Compile Include="Klassen\LockBitmap.cs" />
-    <Compile Include="Klassen\Program.cs" />
+    <Compile Include="Klassen\Main.cs" />
     <Compile Include="Klassen\ImageBuffer.cs" />
     <Compile Include="Klassen\SpeechBubble.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

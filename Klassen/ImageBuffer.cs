@@ -1,82 +1,85 @@
-﻿using ImageHandler.Klassen;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ImageHandler
 {
     class ImageBuffer
     {
-        public LockBitmap[] Imagebuffer = new LockBitmap[Constants.BUFFERSIZE];
-        int index = 0;
-        public int current_buffersize = 0;
-        string File;
+        public static ImageHandler ImageHandler;
+        public Queue<LockBitmap> Imagebuffer = new Queue<LockBitmap>();
+        public bool EndReached = false;
 
-        string[] filevector;
-        int FileIndex = 0;
+        private string FileDialogFileName;
+        private string[] filevector;
+        private int FileIndex = 0;
 
+        /// <summary>
+        /// Windows function for sorting strings like in the fielsystem
+        /// </summary>
+        /// <param name="psz1"></param>
+        /// <param name="psz2"></param>
+        /// <returns></returns>
         [DllImport("shlwapi.dll", CharSet = CharSet.Unicode)]
         public static extern int StrCmpLogicalW(string psz1, string psz2);
 
-        public static MyImages images;
-        public ImageBuffer(MyImages img,string dir)
+        public ImageBuffer(ImageHandler ImageHandlerReference ,string FileSource)
         {
-            images = img;
-            File = dir;
+            ImageHandler = ImageHandlerReference;
+            FileDialogFileName = FileSource;
         }
         public void FillBuffer()
         {
-
             filevector = Directory.GetFiles(Directory.GetCurrentDirectory());
             Array.Sort(filevector,StrCmpLogicalW);
             for (int i = 0; i < filevector.Length; i++)
             {
-                if (filevector[i] == File)
+                if (filevector[i] == FileDialogFileName)
                     FileIndex = i;
             }
-            
-            while (true)
+
+            int iterator = FileIndex;
+            while (!EndReached)
             {
-                if (current_buffersize < Constants.BUFFERSIZE && filevector.Length > FileIndex + current_buffersize)
+                if (Imagebuffer.Count < Constants.BUFFERSIZE && filevector.Length > FileIndex + Imagebuffer.Count)
                 {
-                    Bitmap editable = new Bitmap(filevector[FileIndex + current_buffersize]);
-                    Imagebuffer[(index + current_buffersize) % Constants.BUFFERSIZE] = images.preProcessing(new Bitmap(editable));
-                    current_buffersize++;
+                    try
+                    {
+                    Bitmap editable = new Bitmap(filevector[iterator]);
+                    Imagebuffer.Enqueue(ImageHandler.preProcessing(new Bitmap(editable)));
+                    iterator++;
+                    }
+                    catch (Exception)
+                    {
+                        EndReached = true;
+                    }
                 }
             }
-
         }
         public string getNextFile()
         {
             FileIndex++;
             return filevector[FileIndex];
         }
-        public LockBitmap getCurrentImage()
+        public string getCurrentfile()
         {
-            return Imagebuffer[index % 5];
+            return filevector[FileIndex];
         }
         public LockBitmap getNextImage()
         {
-            current_buffersize--;
-            while(current_buffersize == 0) { }
-            index++;
-            return Imagebuffer[index % 5];
+            while (Imagebuffer.Count == 0) { }
+            return Imagebuffer.Dequeue();
         }
         public void Save(Bitmap bitmap)
         {
-            string p = Directory.GetCurrentDirectory();
-            p += @"\results";
-            if (!Directory.Exists(p))
-                Directory.CreateDirectory(p);
-            p += "\\" + index.ToString() + ".png";
-            bitmap.Save(p, ImageFormat.Png);
+            string savepath = Directory.GetCurrentDirectory() + @"\results";
+            if (!Directory.Exists(savepath))
+                Directory.CreateDirectory(savepath);
+            savepath += "\\" + FileIndex.ToString() + ".png";
+            bitmap.Save(savepath, ImageFormat.Png);
         }
     }
 }
