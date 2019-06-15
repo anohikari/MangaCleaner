@@ -60,6 +60,10 @@ namespace ImageHandler
                     Level.Text = "Level Image";
                 }
             }
+            else
+            {
+                Level.Checked = false;
+            }
         }
 
         private void PbDisplay_MouseClick(object sender, MouseEventArgs e)

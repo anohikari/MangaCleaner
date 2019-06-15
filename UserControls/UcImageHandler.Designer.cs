@@ -111,6 +111,7 @@
             this.LblDarkest.Size = new System.Drawing.Size(147, 13);
             this.LblDarkest.TabIndex = 18;
             this.LblDarkest.Text = "Lower Brightness Threshhold:";
+            this.LblDarkest.Visible = false;
             // 
             // LblBrightest
             // 
@@ -120,6 +121,7 @@
             this.LblBrightest.Size = new System.Drawing.Size(144, 13);
             this.LblBrightest.TabIndex = 19;
             this.LblBrightest.Text = "Upper Brightness Threshhold";
+            this.LblBrightest.Visible = false;
             // 
             // CmdStartLevel
             // 
@@ -129,6 +131,7 @@
             this.CmdStartLevel.TabIndex = 20;
             this.CmdStartLevel.Text = "Confirm and Level";
             this.CmdStartLevel.UseVisualStyleBackColor = true;
+            this.CmdStartLevel.Visible = false;
             this.CmdStartLevel.Click += new System.EventHandler(this.BtnConfirm_Click);
             // 
             // panel1
