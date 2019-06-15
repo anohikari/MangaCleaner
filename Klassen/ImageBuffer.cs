@@ -17,6 +17,8 @@ namespace ImageHandler
         private string[] filevector;
         private int FileIndex = 0;
 
+        public static event Action<int> BufferSizeChanged;
+
         /// <summary>
         /// Windows function for sorting strings like in the fielsystem
         /// </summary>
@@ -46,16 +48,17 @@ namespace ImageHandler
             {
                 if (Imagebuffer.Count < Constants.BUFFERSIZE && filevector.Length > FileIndex + Imagebuffer.Count)
                 {
-                    try
-                    {
-                    Bitmap editable = new Bitmap(filevector[iterator]);
-                    Imagebuffer.Enqueue(ImageHandler.preProcessing(new Bitmap(editable)));
-                    iterator++;
-                    }
-                    catch (Exception)
-                    {
-                        EndReached = true;
-                    }
+                    //try
+                    //{
+                        Bitmap editable = new Bitmap(filevector[iterator]);
+                        Imagebuffer.Enqueue(ImageHandler.preProcessing(new Bitmap(editable)));
+                        BufferSizeChanged(Imagebuffer.Count);
+                        iterator++;
+                    //}
+                    //catch (Exception)
+                    //{
+                    //    EndReached = true;
+                    //}
                 }
             }
         }
@@ -71,6 +74,7 @@ namespace ImageHandler
         public LockBitmap getNextImage()
         {
             while (Imagebuffer.Count == 0) { }
+            BufferSizeChanged(Imagebuffer.Count - 1);
             return Imagebuffer.Dequeue();
         }
         public void Save(Bitmap bitmap)

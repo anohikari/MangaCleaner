@@ -28,9 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.menuToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.loadDataToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.components = new System.ComponentModel.Container();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.PbDisplay = new System.Windows.Forms.PictureBox();
             this.CmdUndo = new System.Windows.Forms.Button();
@@ -40,41 +38,24 @@
             this.LblBrightest = new System.Windows.Forms.Label();
             this.CmdStartLevel = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.CheckDebug = new System.Windows.Forms.CheckBox();
             this.Level = new System.Windows.Forms.CheckBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.menuStrip1.SuspendLayout();
+            this.NumThreshholdLower = new System.Windows.Forms.NumericUpDown();
+            this.NumThreshholdUp = new System.Windows.Forms.NumericUpDown();
+            this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.LblNoFile = new System.Windows.Forms.Label();
+            this.LblControlLevel = new System.Windows.Forms.Label();
+            this.LblBufferSize = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.PbDisplay)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.NumThreshholdLower)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NumThreshholdUp)).BeginInit();
             this.SuspendLayout();
-            // 
-            // menuStrip1
-            // 
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1000, 24);
-            this.menuStrip1.TabIndex = 3;
-            this.menuStrip1.Text = "menuStrip1";
-            // 
-            // menuToolStripMenuItem
-            // 
-            this.menuToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.loadDataToolStripMenuItem});
-            this.menuToolStripMenuItem.Name = "menuToolStripMenuItem";
-            this.menuToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
-            this.menuToolStripMenuItem.Text = "Menu";
-            // 
-            // loadDataToolStripMenuItem
-            // 
-            this.loadDataToolStripMenuItem.Name = "loadDataToolStripMenuItem";
-            this.loadDataToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.loadDataToolStripMenuItem.Text = "Load Image";
-            this.loadDataToolStripMenuItem.Click += new System.EventHandler(this.loadDataToolStripMenuItem_Click);
             // 
             // openFileDialog
             // 
@@ -85,14 +66,14 @@
             this.PbDisplay.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PbDisplay.Location = new System.Drawing.Point(0, 0);
             this.PbDisplay.Name = "PbDisplay";
-            this.PbDisplay.Size = new System.Drawing.Size(736, 976);
+            this.PbDisplay.Size = new System.Drawing.Size(736, 1000);
             this.PbDisplay.TabIndex = 7;
             this.PbDisplay.TabStop = false;
             this.PbDisplay.MouseClick += new System.Windows.Forms.MouseEventHandler(this.PbDisplay_MouseClick);
             // 
             // CmdUndo
             // 
-            this.CmdUndo.Location = new System.Drawing.Point(33, 343);
+            this.CmdUndo.Location = new System.Drawing.Point(21, 324);
             this.CmdUndo.Name = "CmdUndo";
             this.CmdUndo.Size = new System.Drawing.Size(123, 44);
             this.CmdUndo.TabIndex = 15;
@@ -102,7 +83,7 @@
             // 
             // CmdReload
             // 
-            this.CmdReload.Location = new System.Drawing.Point(33, 414);
+            this.CmdReload.Location = new System.Drawing.Point(21, 393);
             this.CmdReload.Name = "CmdReload";
             this.CmdReload.Size = new System.Drawing.Size(123, 44);
             this.CmdReload.TabIndex = 16;
@@ -112,11 +93,13 @@
             // 
             // CmdNextImage
             // 
-            this.CmdNextImage.Location = new System.Drawing.Point(33, 490);
+            this.CmdNextImage.Location = new System.Drawing.Point(21, 462);
             this.CmdNextImage.Name = "CmdNextImage";
             this.CmdNextImage.Size = new System.Drawing.Size(123, 46);
             this.CmdNextImage.TabIndex = 17;
             this.CmdNextImage.Text = "Save + Next Image";
+            this.ToolTip.SetToolTip(this.CmdNextImage, "Saves Image to Resultfolder within the opened directory and loads next Image from" +
+        " Buffer");
             this.CmdNextImage.UseVisualStyleBackColor = true;
             this.CmdNextImage.Click += new System.EventHandler(this.CmdNextImage_Click);
             // 
@@ -132,7 +115,7 @@
             // LblBrightest
             // 
             this.LblBrightest.AutoSize = true;
-            this.LblBrightest.Location = new System.Drawing.Point(30, 186);
+            this.LblBrightest.Location = new System.Drawing.Point(30, 159);
             this.LblBrightest.Name = "LblBrightest";
             this.LblBrightest.Size = new System.Drawing.Size(144, 13);
             this.LblBrightest.TabIndex = 19;
@@ -140,16 +123,21 @@
             // 
             // CmdStartLevel
             // 
-            this.CmdStartLevel.Location = new System.Drawing.Point(33, 245);
+            this.CmdStartLevel.Location = new System.Drawing.Point(33, 201);
             this.CmdStartLevel.Name = "CmdStartLevel";
-            this.CmdStartLevel.Size = new System.Drawing.Size(137, 23);
+            this.CmdStartLevel.Size = new System.Drawing.Size(127, 23);
             this.CmdStartLevel.TabIndex = 20;
-            this.CmdStartLevel.Text = "Confirm Level Thresholds";
+            this.CmdStartLevel.Text = "Confirm and Level";
             this.CmdStartLevel.UseVisualStyleBackColor = true;
             this.CmdStartLevel.Click += new System.EventHandler(this.BtnConfirm_Click);
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.LblBufferSize);
+            this.panel1.Controls.Add(this.LblControlLevel);
+            this.panel1.Controls.Add(this.NumThreshholdUp);
+            this.panel1.Controls.Add(this.NumThreshholdLower);
+            this.panel1.Controls.Add(this.CheckDebug);
             this.panel1.Controls.Add(this.LblDarkest);
             this.panel1.Controls.Add(this.CmdStartLevel);
             this.panel1.Controls.Add(this.Level);
@@ -160,29 +148,44 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(260, 976);
+            this.panel1.Size = new System.Drawing.Size(260, 1000);
             this.panel1.TabIndex = 21;
+            // 
+            // CheckDebug
+            // 
+            this.CheckDebug.AutoSize = true;
+            this.CheckDebug.Location = new System.Drawing.Point(21, 31);
+            this.CheckDebug.Name = "CheckDebug";
+            this.CheckDebug.Size = new System.Drawing.Size(153, 17);
+            this.CheckDebug.TabIndex = 21;
+            this.CheckDebug.Text = "Show Preprocessed Image";
+            this.ToolTip.SetToolTip(this.CheckDebug, "Show the flattened image and its marked regions used for internal regioning");
+            this.CheckDebug.UseVisualStyleBackColor = true;
+            this.CheckDebug.CheckedChanged += new System.EventHandler(this.CheckDebug_CheckedChanged);
             // 
             // Level
             // 
+            this.Level.Appearance = System.Windows.Forms.Appearance.Button;
             this.Level.AutoSize = true;
-            this.Level.Location = new System.Drawing.Point(33, 64);
+            this.Level.Location = new System.Drawing.Point(21, 93);
             this.Level.Name = "Level";
-            this.Level.Size = new System.Drawing.Size(52, 17);
+            this.Level.Size = new System.Drawing.Size(78, 23);
             this.Level.TabIndex = 9;
-            this.Level.Text = "Level";
+            this.Level.Text = "Level  Image";
+            this.ToolTip.SetToolTip(this.Level, "Stretch the Color spectrum to intensify colors");
             this.Level.UseVisualStyleBackColor = true;
             this.Level.CheckedChanged += new System.EventHandler(this.Level_CheckedChanged);
             // 
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 24);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 0);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.AllowDrop = true;
+            this.splitContainer1.Panel1.Controls.Add(this.LblNoFile);
             this.splitContainer1.Panel1.Controls.Add(this.PbDisplay);
             this.splitContainer1.Panel1.DragDrop += new System.Windows.Forms.DragEventHandler(this.splitContainer1_Panel1_DragDrop);
             this.splitContainer1.Panel1.DragEnter += new System.Windows.Forms.DragEventHandler(this.splitContainer1_Panel1_DragEnter);
@@ -190,36 +193,96 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.panel1);
-            this.splitContainer1.Size = new System.Drawing.Size(1000, 976);
+            this.splitContainer1.Size = new System.Drawing.Size(1000, 1000);
             this.splitContainer1.SplitterDistance = 736;
             this.splitContainer1.TabIndex = 22;
+            // 
+            // NumThreshholdLower
+            // 
+            this.NumThreshholdLower.Location = new System.Drawing.Point(33, 136);
+            this.NumThreshholdLower.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.NumThreshholdLower.Name = "NumThreshholdLower";
+            this.NumThreshholdLower.Size = new System.Drawing.Size(120, 20);
+            this.NumThreshholdLower.TabIndex = 22;
+            this.ToolTip.SetToolTip(this.NumThreshholdLower, "Selects the Lower leveling threshhold");
+            this.NumThreshholdLower.Visible = false;
+            this.NumThreshholdLower.ValueChanged += new System.EventHandler(this.NumThreshholdLower_ValueChanged);
+            // 
+            // NumThreshholdUp
+            // 
+            this.NumThreshholdUp.Location = new System.Drawing.Point(33, 175);
+            this.NumThreshholdUp.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.NumThreshholdUp.Name = "NumThreshholdUp";
+            this.NumThreshholdUp.Size = new System.Drawing.Size(120, 20);
+            this.NumThreshholdUp.TabIndex = 23;
+            this.ToolTip.SetToolTip(this.NumThreshholdUp, "Selects the Upper leveling threshhold");
+            this.NumThreshholdUp.Value = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.NumThreshholdUp.Visible = false;
+            this.NumThreshholdUp.ValueChanged += new System.EventHandler(this.NumThreshholdUp_ValueChanged);
+            // 
+            // LblNoFile
+            // 
+            this.LblNoFile.AutoSize = true;
+            this.LblNoFile.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.LblNoFile.Location = new System.Drawing.Point(342, 494);
+            this.LblNoFile.Name = "LblNoFile";
+            this.LblNoFile.Size = new System.Drawing.Size(52, 13);
+            this.LblNoFile.TabIndex = 8;
+            this.LblNoFile.Text = "Loading";
+            // 
+            // LblControlLevel
+            // 
+            this.LblControlLevel.AutoSize = true;
+            this.LblControlLevel.Location = new System.Drawing.Point(21, 231);
+            this.LblControlLevel.Name = "LblControlLevel";
+            this.LblControlLevel.Size = new System.Drawing.Size(120, 13);
+            this.LblControlLevel.TabIndex = 25;
+            this.LblControlLevel.Text = "This shouldn´t be visible";
+            this.LblControlLevel.Visible = false;
+            // 
+            // LblBufferSize
+            // 
+            this.LblBufferSize.AutoSize = true;
+            this.LblBufferSize.Location = new System.Drawing.Point(33, 515);
+            this.LblBufferSize.Name = "LblBufferSize";
+            this.LblBufferSize.Size = new System.Drawing.Size(108, 13);
+            this.LblBufferSize.TabIndex = 26;
+            this.LblBufferSize.Text = "Current Buffersize = 0";
             // 
             // UcImageHandler
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainer1);
-            this.Controls.Add(this.menuStrip1);
             this.Name = "UcImageHandler";
             this.Size = new System.Drawing.Size(1000, 1000);
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.PbDisplay)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.NumThreshholdLower)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NumThreshholdUp)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-        private System.Windows.Forms.MenuStrip menuStrip1;
-        private System.Windows.Forms.ToolStripMenuItem menuToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem loadDataToolStripMenuItem;
         private System.Windows.Forms.OpenFileDialog openFileDialog;
         private System.Windows.Forms.PictureBox PbDisplay;
         private System.Windows.Forms.Button CmdUndo;
@@ -231,5 +294,12 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.CheckBox Level;
         private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.CheckBox CheckDebug;
+        private System.Windows.Forms.NumericUpDown NumThreshholdUp;
+        private System.Windows.Forms.NumericUpDown NumThreshholdLower;
+        private System.Windows.Forms.ToolTip ToolTip;
+        private System.Windows.Forms.Label LblNoFile;
+        private System.Windows.Forms.Label LblControlLevel;
+        private System.Windows.Forms.Label LblBufferSize;
     }
 }

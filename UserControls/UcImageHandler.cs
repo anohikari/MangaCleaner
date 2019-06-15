@@ -12,12 +12,16 @@ namespace ImageHandler
         private ImageHandler ImageHandler = new ImageHandler();
         double ScalingFactor = 1;
 
+        public delegate void  ChangeBufferlabel(int size);
+
         public UcImageHandler()
         {
             InitializeComponent();
-            LblDarkest.Visible = LblBrightest.Visible = CmdStartLevel.Visible = false;
+            ImageBuffer.BufferSizeChanged += CallMainThread;
             SpeechBubble.ImageHandler = ImageHandler;
             ImageBuffer.ImageHandler = ImageHandler;
+            LblNoFile.Text = "Click here to load an image! \n Or Drag and Drop it onto the Form!";
+            LblControlLevel.Text = "Note: You can also click left/right on any pixel to set it´s brightness as the lower/upper threshhold!";
         }
 
         private void loadDataToolStripMenuItem_Click(object sender, EventArgs e)
@@ -32,6 +36,7 @@ namespace ImageHandler
                 try
                 {
                     ImageHandler.Init(openFileDialog.FileName);
+                    LblNoFile.Visible = false;
                     setImage(ImageHandler.ResultImage.source);
                 }
                 catch (Exception) { }       // TODO: Output an error 
@@ -40,32 +45,37 @@ namespace ImageHandler
 
         private void Level_CheckedChanged(object sender, EventArgs e)
         {
-            if (Level.Checked)
+            if(ImageHandler.ResultImage != null)
             {
-                ImageHandler.ResultImage.LockBits();
-                LblDarkest.Visible = LblBrightest.Visible = CmdStartLevel.Visible = true;
-            }
-            else
-            {
-                ImageHandler.ResultImage.UnlockBits();
-                LblDarkest.Visible = LblBrightest.Visible = CmdStartLevel.Visible = false;
+                if (Level.Checked)
+                {
+                    ImageHandler.ResultImage.LockBits();
+                    LblDarkest.Visible = LblBrightest.Visible = CmdStartLevel.Visible =  NumThreshholdLower.Visible = NumThreshholdUp.Visible = LblControlLevel.Visible = true;
+                    Level.Text = "Reenable Bubble Deletion";
+                }
+                else
+                {
+                    ImageHandler.ResultImage.UnlockBits();
+                    LblDarkest.Visible = LblBrightest.Visible = CmdStartLevel.Visible = NumThreshholdLower.Visible = NumThreshholdUp.Visible = LblControlLevel.Visible = false;
+                    Level.Text = "Level Image";
+                }
             }
         }
 
         private void PbDisplay_MouseClick(object sender, MouseEventArgs e)
         {
-            if (Level.Checked && ImageHandler.CurrentImage != null)
+            if (Level.Checked && ImageHandler.ResultImage != null)
             {
                 if (e.Button == MouseButtons.Left)
                 {
                     ImageHandler.LowerBound = Convert.ToByte(ImageHandler.ResultImage.GetPixel((int)(e.X / ScalingFactor), (int)(e.Y / ScalingFactor)).GetBrightness() * 255);
-                    LblDarkest.Text = "Lower Brightness Threshhold:\n" + ImageHandler.LowerBound.ToString();
+                    NumThreshholdLower.Value = ImageHandler.LowerBound;
 
                 }
                 if (e.Button == MouseButtons.Right)
                 {
                     ImageHandler.UpperBound = Convert.ToByte(ImageHandler.ResultImage.GetPixel((int)(e.X / ScalingFactor), (int)(e.Y / ScalingFactor)).GetBrightness() * 255);
-                    LblBrightest.Text = "Upper Brightness Threshhold:\n" + ImageHandler.UpperBound.ToString();
+                    NumThreshholdUp.Value = ImageHandler.UpperBound;
                 }
             }
             else if (ImageHandler.CurrentImage != null)
@@ -75,6 +85,11 @@ namespace ImageHandler
                 newBubble.CleanBubble();
                 setImage(ImageHandler.ResultImage.source);
             }
+            else
+            {
+                loadDataToolStripMenuItem_Click(sender, e);
+            }
+                
         }
 
         private void BtnConfirm_Click(object sender, EventArgs e)
@@ -139,5 +154,42 @@ namespace ImageHandler
             ImageHandler.Init(droppedFiles[0]);
             setImage(ImageHandler.ResultImage.source);
         }
+
+        private void CheckDebug_CheckedChanged(object sender, EventArgs e)
+        {
+            if(ImageHandler.CurrentImage != null)
+            {
+                if (CheckDebug.Checked && ImageHandler.CurrentImage != null)
+                {
+                    setImage(ImageHandler.CurrentImage.source);
+                }
+                else
+                {
+                    setImage(ImageHandler.ResultImage.source);
+                }
+            }
+
+        }
+
+        private void NumThreshholdLower_ValueChanged(object sender, EventArgs e)
+        {
+            ImageHandler.LowerBound = (byte)NumThreshholdLower.Value;
+        }
+
+        private void NumThreshholdUp_ValueChanged(object sender, EventArgs e)
+        {
+            ImageHandler.UpperBound = (byte)NumThreshholdUp.Value;
+        }
+        public void CallMainThread(int size)
+        {
+            ChangeBufferlabel mainThreadDelegate = new ChangeBufferlabel(setBufferLabel);
+            Invoke(mainThreadDelegate, size);
+        }
+
+        public void setBufferLabel(int size)
+        {
+            LblBufferSize.Text = "Current Buffersize = " + size.ToString();
+        }
+
     }
 }
