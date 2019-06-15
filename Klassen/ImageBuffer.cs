@@ -48,17 +48,17 @@ namespace ImageHandler
             {
                 if (Imagebuffer.Count < Constants.BUFFERSIZE && filevector.Length > FileIndex + Imagebuffer.Count)
                 {
-                    //try
-                    //{
+                    try
+                    {
                         Bitmap editable = new Bitmap(filevector[iterator]);
                         Imagebuffer.Enqueue(ImageHandler.preProcessing(new Bitmap(editable)));
                         BufferSizeChanged(Imagebuffer.Count);
                         iterator++;
-                    //}
-                    //catch (Exception)
-                    //{
-                    //    EndReached = true;
-                    //}
+                    }
+                    catch (Exception)
+                    {
+                        EndReached = true;
+                    }
                 }
             }
         }
