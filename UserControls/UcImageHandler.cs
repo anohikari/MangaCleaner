@@ -192,8 +192,18 @@ namespace ImageHandler
 
         public void setBufferLabel(int size)
         {
+            if(size == -1 || LblBufferSize.Text == "All Remaining consecutive files loaded")
+            {
+                LblBufferSize.Text = "All Remaining consecutive files loaded";
+                return;
+            }
             LblBufferSize.Text = "Current Buffersize = " + size.ToString();
         }
 
+        private void PbDisplay_SizeChanged(object sender, EventArgs e)
+        {
+            if (ImageHandler.ResultImage != null)
+                setImage(ImageHandler.ResultImage.source);
+        }
     }
 }

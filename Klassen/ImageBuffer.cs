@@ -57,6 +57,7 @@ namespace ImageHandler
                     }
                     catch (Exception)
                     {
+                        BufferSizeChanged(-1);
                         EndReached = true;
                     }
                 }

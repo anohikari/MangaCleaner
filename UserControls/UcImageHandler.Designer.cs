@@ -47,6 +47,7 @@
             this.LblNoFile = new System.Windows.Forms.Label();
             this.LblControlLevel = new System.Windows.Forms.Label();
             this.LblBufferSize = new System.Windows.Forms.Label();
+            this.CmdLoad = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.PbDisplay)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -69,11 +70,12 @@
             this.PbDisplay.Size = new System.Drawing.Size(736, 1000);
             this.PbDisplay.TabIndex = 7;
             this.PbDisplay.TabStop = false;
+            this.PbDisplay.SizeChanged += new System.EventHandler(this.PbDisplay_SizeChanged);
             this.PbDisplay.MouseClick += new System.Windows.Forms.MouseEventHandler(this.PbDisplay_MouseClick);
             // 
             // CmdUndo
             // 
-            this.CmdUndo.Location = new System.Drawing.Point(21, 324);
+            this.CmdUndo.Location = new System.Drawing.Point(18, 376);
             this.CmdUndo.Name = "CmdUndo";
             this.CmdUndo.Size = new System.Drawing.Size(123, 44);
             this.CmdUndo.TabIndex = 15;
@@ -83,21 +85,21 @@
             // 
             // CmdReload
             // 
-            this.CmdReload.Location = new System.Drawing.Point(21, 393);
+            this.CmdReload.Location = new System.Drawing.Point(18, 426);
             this.CmdReload.Name = "CmdReload";
             this.CmdReload.Size = new System.Drawing.Size(123, 44);
             this.CmdReload.TabIndex = 16;
-            this.CmdReload.Text = "Reload current Image";
+            this.CmdReload.Text = "Reload current image";
             this.CmdReload.UseVisualStyleBackColor = true;
             this.CmdReload.Click += new System.EventHandler(this.CmdReload_Click);
             // 
             // CmdNextImage
             // 
-            this.CmdNextImage.Location = new System.Drawing.Point(21, 462);
+            this.CmdNextImage.Location = new System.Drawing.Point(18, 324);
             this.CmdNextImage.Name = "CmdNextImage";
             this.CmdNextImage.Size = new System.Drawing.Size(123, 46);
             this.CmdNextImage.TabIndex = 17;
-            this.CmdNextImage.Text = "Save + Next Image";
+            this.CmdNextImage.Text = "Save + Next image";
             this.ToolTip.SetToolTip(this.CmdNextImage, "Saves Image to Resultfolder within the opened directory and loads next Image from" +
         " Buffer");
             this.CmdNextImage.UseVisualStyleBackColor = true;
@@ -108,9 +110,9 @@
             this.LblDarkest.AutoSize = true;
             this.LblDarkest.Location = new System.Drawing.Point(30, 119);
             this.LblDarkest.Name = "LblDarkest";
-            this.LblDarkest.Size = new System.Drawing.Size(147, 13);
+            this.LblDarkest.Size = new System.Drawing.Size(142, 13);
             this.LblDarkest.TabIndex = 18;
-            this.LblDarkest.Text = "Lower Brightness Threshhold:";
+            this.LblDarkest.Text = "Lower brightness threshhold:";
             this.LblDarkest.Visible = false;
             // 
             // LblBrightest
@@ -118,9 +120,9 @@
             this.LblBrightest.AutoSize = true;
             this.LblBrightest.Location = new System.Drawing.Point(30, 159);
             this.LblBrightest.Name = "LblBrightest";
-            this.LblBrightest.Size = new System.Drawing.Size(144, 13);
+            this.LblBrightest.Size = new System.Drawing.Size(139, 13);
             this.LblBrightest.TabIndex = 19;
-            this.LblBrightest.Text = "Upper Brightness Threshhold";
+            this.LblBrightest.Text = "Upper brightness threshhold";
             this.LblBrightest.Visible = false;
             // 
             // CmdStartLevel
@@ -129,13 +131,14 @@
             this.CmdStartLevel.Name = "CmdStartLevel";
             this.CmdStartLevel.Size = new System.Drawing.Size(127, 23);
             this.CmdStartLevel.TabIndex = 20;
-            this.CmdStartLevel.Text = "Confirm and Level";
+            this.CmdStartLevel.Text = "Confirm and level";
             this.CmdStartLevel.UseVisualStyleBackColor = true;
             this.CmdStartLevel.Visible = false;
             this.CmdStartLevel.Click += new System.EventHandler(this.BtnConfirm_Click);
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.CmdLoad);
             this.panel1.Controls.Add(this.LblBufferSize);
             this.panel1.Controls.Add(this.LblControlLevel);
             this.panel1.Controls.Add(this.NumThreshholdUp);
@@ -172,9 +175,9 @@
             this.Level.AutoSize = true;
             this.Level.Location = new System.Drawing.Point(21, 93);
             this.Level.Name = "Level";
-            this.Level.Size = new System.Drawing.Size(78, 23);
+            this.Level.Size = new System.Drawing.Size(77, 23);
             this.Level.TabIndex = 9;
-            this.Level.Text = "Level  Image";
+            this.Level.Text = "Level  image";
             this.ToolTip.SetToolTip(this.Level, "Stretch the Color spectrum to intensify colors");
             this.Level.UseVisualStyleBackColor = true;
             this.Level.CheckedChanged += new System.EventHandler(this.Level_CheckedChanged);
@@ -258,11 +261,21 @@
             // LblBufferSize
             // 
             this.LblBufferSize.AutoSize = true;
-            this.LblBufferSize.Location = new System.Drawing.Point(33, 515);
+            this.LblBufferSize.Location = new System.Drawing.Point(30, 483);
             this.LblBufferSize.Name = "LblBufferSize";
             this.LblBufferSize.Size = new System.Drawing.Size(108, 13);
             this.LblBufferSize.TabIndex = 26;
             this.LblBufferSize.Text = "Current Buffersize = 0";
+            // 
+            // CmdLoad
+            // 
+            this.CmdLoad.Location = new System.Drawing.Point(18, 277);
+            this.CmdLoad.Name = "CmdLoad";
+            this.CmdLoad.Size = new System.Drawing.Size(120, 41);
+            this.CmdLoad.TabIndex = 27;
+            this.CmdLoad.Text = "Load image";
+            this.CmdLoad.UseVisualStyleBackColor = true;
+            this.CmdLoad.Click += new System.EventHandler(this.loadDataToolStripMenuItem_Click);
             // 
             // UcImageHandler
             // 
@@ -304,5 +317,6 @@
         private System.Windows.Forms.Label LblNoFile;
         private System.Windows.Forms.Label LblControlLevel;
         private System.Windows.Forms.Label LblBufferSize;
+        private System.Windows.Forms.Button CmdLoad;
     }
 }
