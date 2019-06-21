@@ -38,24 +38,24 @@
             this.LblBrightest = new System.Windows.Forms.Label();
             this.CmdStartLevel = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.CmdLoad = new System.Windows.Forms.Button();
+            this.LblBufferSize = new System.Windows.Forms.Label();
+            this.LblControlLevel = new System.Windows.Forms.Label();
+            this.NumThreshholdUp = new System.Windows.Forms.NumericUpDown();
+            this.NumThreshholdLower = new System.Windows.Forms.NumericUpDown();
             this.CheckDebug = new System.Windows.Forms.CheckBox();
             this.Level = new System.Windows.Forms.CheckBox();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-            this.NumThreshholdLower = new System.Windows.Forms.NumericUpDown();
-            this.NumThreshholdUp = new System.Windows.Forms.NumericUpDown();
-            this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.LblNoFile = new System.Windows.Forms.Label();
-            this.LblControlLevel = new System.Windows.Forms.Label();
-            this.LblBufferSize = new System.Windows.Forms.Label();
-            this.CmdLoad = new System.Windows.Forms.Button();
+            this.ToolTip = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.PbDisplay)).BeginInit();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.NumThreshholdUp)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NumThreshholdLower)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.NumThreshholdLower)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.NumThreshholdUp)).BeginInit();
             this.SuspendLayout();
             // 
             // openFileDialog
@@ -113,6 +113,7 @@
             this.LblDarkest.Size = new System.Drawing.Size(142, 13);
             this.LblDarkest.TabIndex = 18;
             this.LblDarkest.Text = "Lower brightness threshhold:";
+            this.ToolTip.SetToolTip(this.LblDarkest, "This should correspond with the darkest pixel in the image");
             this.LblDarkest.Visible = false;
             // 
             // LblBrightest
@@ -123,6 +124,7 @@
             this.LblBrightest.Size = new System.Drawing.Size(139, 13);
             this.LblBrightest.TabIndex = 19;
             this.LblBrightest.Text = "Upper brightness threshhold";
+            this.ToolTip.SetToolTip(this.LblBrightest, "This should correspond with the brightest pixel in the image");
             this.LblBrightest.Visible = false;
             // 
             // CmdStartLevel
@@ -132,6 +134,8 @@
             this.CmdStartLevel.Size = new System.Drawing.Size(127, 23);
             this.CmdStartLevel.TabIndex = 20;
             this.CmdStartLevel.Text = "Confirm and level";
+            this.ToolTip.SetToolTip(this.CmdStartLevel, "Stretches the color spectrum from \"lower brightness\" - \"upper brightness\" to the " +
+        "full spectrum");
             this.CmdStartLevel.UseVisualStyleBackColor = true;
             this.CmdStartLevel.Visible = false;
             this.CmdStartLevel.Click += new System.EventHandler(this.BtnConfirm_Click);
@@ -157,6 +161,72 @@
             this.panel1.Size = new System.Drawing.Size(260, 1000);
             this.panel1.TabIndex = 21;
             // 
+            // CmdLoad
+            // 
+            this.CmdLoad.Location = new System.Drawing.Point(18, 277);
+            this.CmdLoad.Name = "CmdLoad";
+            this.CmdLoad.Size = new System.Drawing.Size(120, 41);
+            this.CmdLoad.TabIndex = 27;
+            this.CmdLoad.Text = "Load image";
+            this.ToolTip.SetToolTip(this.CmdLoad, "Opens the File Browser");
+            this.CmdLoad.UseVisualStyleBackColor = true;
+            this.CmdLoad.Click += new System.EventHandler(this.loadDataToolStripMenuItem_Click);
+            // 
+            // LblBufferSize
+            // 
+            this.LblBufferSize.AutoSize = true;
+            this.LblBufferSize.Location = new System.Drawing.Point(30, 483);
+            this.LblBufferSize.Name = "LblBufferSize";
+            this.LblBufferSize.Size = new System.Drawing.Size(108, 13);
+            this.LblBufferSize.TabIndex = 26;
+            this.LblBufferSize.Text = "Current Buffersize = 0";
+            this.ToolTip.SetToolTip(this.LblBufferSize, "Amount of Images for which a preprocessed version is already available");
+            // 
+            // LblControlLevel
+            // 
+            this.LblControlLevel.AutoSize = true;
+            this.LblControlLevel.Location = new System.Drawing.Point(21, 231);
+            this.LblControlLevel.Name = "LblControlLevel";
+            this.LblControlLevel.Size = new System.Drawing.Size(120, 13);
+            this.LblControlLevel.TabIndex = 25;
+            this.LblControlLevel.Text = "This shouldn´t be visible";
+            this.LblControlLevel.Visible = false;
+            // 
+            // NumThreshholdUp
+            // 
+            this.NumThreshholdUp.Location = new System.Drawing.Point(33, 175);
+            this.NumThreshholdUp.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.NumThreshholdUp.Name = "NumThreshholdUp";
+            this.NumThreshholdUp.Size = new System.Drawing.Size(120, 20);
+            this.NumThreshholdUp.TabIndex = 23;
+            this.ToolTip.SetToolTip(this.NumThreshholdUp, "Selects the Upper leveling threshhold");
+            this.NumThreshholdUp.Value = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.NumThreshholdUp.Visible = false;
+            this.NumThreshholdUp.ValueChanged += new System.EventHandler(this.NumThreshholdUp_ValueChanged);
+            // 
+            // NumThreshholdLower
+            // 
+            this.NumThreshholdLower.Location = new System.Drawing.Point(33, 136);
+            this.NumThreshholdLower.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.NumThreshholdLower.Name = "NumThreshholdLower";
+            this.NumThreshholdLower.Size = new System.Drawing.Size(120, 20);
+            this.NumThreshholdLower.TabIndex = 22;
+            this.ToolTip.SetToolTip(this.NumThreshholdLower, "Selects the Lower leveling threshhold");
+            this.NumThreshholdLower.Visible = false;
+            this.NumThreshholdLower.ValueChanged += new System.EventHandler(this.NumThreshholdLower_ValueChanged);
+            // 
             // CheckDebug
             // 
             this.CheckDebug.AutoSize = true;
@@ -165,7 +235,7 @@
             this.CheckDebug.Size = new System.Drawing.Size(153, 17);
             this.CheckDebug.TabIndex = 21;
             this.CheckDebug.Text = "Show Preprocessed Image";
-            this.ToolTip.SetToolTip(this.CheckDebug, "Show the flattened image and its marked regions used for internal regioning");
+            this.ToolTip.SetToolTip(this.CheckDebug, "Show the flattened image and its marked regions used for internal processing");
             this.CheckDebug.UseVisualStyleBackColor = true;
             this.CheckDebug.CheckedChanged += new System.EventHandler(this.CheckDebug_CheckedChanged);
             // 
@@ -203,41 +273,6 @@
             this.splitContainer1.SplitterDistance = 736;
             this.splitContainer1.TabIndex = 22;
             // 
-            // NumThreshholdLower
-            // 
-            this.NumThreshholdLower.Location = new System.Drawing.Point(33, 136);
-            this.NumThreshholdLower.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.NumThreshholdLower.Name = "NumThreshholdLower";
-            this.NumThreshholdLower.Size = new System.Drawing.Size(120, 20);
-            this.NumThreshholdLower.TabIndex = 22;
-            this.ToolTip.SetToolTip(this.NumThreshholdLower, "Selects the Lower leveling threshhold");
-            this.NumThreshholdLower.Visible = false;
-            this.NumThreshholdLower.ValueChanged += new System.EventHandler(this.NumThreshholdLower_ValueChanged);
-            // 
-            // NumThreshholdUp
-            // 
-            this.NumThreshholdUp.Location = new System.Drawing.Point(33, 175);
-            this.NumThreshholdUp.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.NumThreshholdUp.Name = "NumThreshholdUp";
-            this.NumThreshholdUp.Size = new System.Drawing.Size(120, 20);
-            this.NumThreshholdUp.TabIndex = 23;
-            this.ToolTip.SetToolTip(this.NumThreshholdUp, "Selects the Upper leveling threshhold");
-            this.NumThreshholdUp.Value = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.NumThreshholdUp.Visible = false;
-            this.NumThreshholdUp.ValueChanged += new System.EventHandler(this.NumThreshholdUp_ValueChanged);
-            // 
             // LblNoFile
             // 
             this.LblNoFile.AutoSize = true;
@@ -247,35 +282,6 @@
             this.LblNoFile.Size = new System.Drawing.Size(52, 13);
             this.LblNoFile.TabIndex = 8;
             this.LblNoFile.Text = "Loading";
-            // 
-            // LblControlLevel
-            // 
-            this.LblControlLevel.AutoSize = true;
-            this.LblControlLevel.Location = new System.Drawing.Point(21, 231);
-            this.LblControlLevel.Name = "LblControlLevel";
-            this.LblControlLevel.Size = new System.Drawing.Size(120, 13);
-            this.LblControlLevel.TabIndex = 25;
-            this.LblControlLevel.Text = "This shouldn´t be visible";
-            this.LblControlLevel.Visible = false;
-            // 
-            // LblBufferSize
-            // 
-            this.LblBufferSize.AutoSize = true;
-            this.LblBufferSize.Location = new System.Drawing.Point(30, 483);
-            this.LblBufferSize.Name = "LblBufferSize";
-            this.LblBufferSize.Size = new System.Drawing.Size(108, 13);
-            this.LblBufferSize.TabIndex = 26;
-            this.LblBufferSize.Text = "Current Buffersize = 0";
-            // 
-            // CmdLoad
-            // 
-            this.CmdLoad.Location = new System.Drawing.Point(18, 277);
-            this.CmdLoad.Name = "CmdLoad";
-            this.CmdLoad.Size = new System.Drawing.Size(120, 41);
-            this.CmdLoad.TabIndex = 27;
-            this.CmdLoad.Text = "Load image";
-            this.CmdLoad.UseVisualStyleBackColor = true;
-            this.CmdLoad.Click += new System.EventHandler(this.loadDataToolStripMenuItem_Click);
             // 
             // UcImageHandler
             // 
@@ -287,13 +293,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.PbDisplay)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.NumThreshholdUp)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NumThreshholdLower)).EndInit();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.NumThreshholdLower)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.NumThreshholdUp)).EndInit();
             this.ResumeLayout(false);
 
         }

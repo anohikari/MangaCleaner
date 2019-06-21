@@ -10,13 +10,13 @@ namespace ImageHandler.Klassen
     {
         public static ImageHandler ImageHandler;
         public static LockBitmap CurrentImage;   
-        private Point InitPoint;
 
-        public int XMin, YMin = 10000;
-        int XMax, YMax = 0;
-        int Size = 0;
-        Queue<Point> RegionBoundary = new Queue<Point>();
-        Queue<Point> RegionTextPoints = new Queue<Point>();
+        private Point InitPoint;
+        private int XMin, YMin = 10000;
+        private int XMax, YMax = 0;
+        private int Size = 0;
+        private Queue<Point> RegionBoundary = new Queue<Point>();
+        private Queue<Point> RegionTextPoints = new Queue<Point>();
 
         public SpeechBubble(int XInit, int YInit)
         {
@@ -68,7 +68,7 @@ namespace ImageHandler.Klassen
             
 
             CurrentImage.SetPixel(p.X, p.Y, Constants.MARKED);
-            foreach (Point AdjacentPixel in getNeighbourPixels(p))
+            foreach (Point AdjacentPixel in getAdjacentPixels(p))
             {
                 if (CurrentImage.GetPixel(AdjacentPixel.X, AdjacentPixel.Y).G == 255)
                 {
@@ -83,7 +83,8 @@ namespace ImageHandler.Klassen
             }
 
         }
-        List<Point> getNeighbourPixels(Point p) {
+        List<Point> getAdjacentPixels
+            (Point p) {
             List<Point> Neighbours = new List<Point>();
             Neighbours.Add(new Point(p.X + 1, p.Y));
             Neighbours.Add(new Point(p.X - 1, p.Y));

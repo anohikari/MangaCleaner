@@ -12,6 +12,7 @@ namespace ImageHandler
         ImageBuffer ImageBuffer;
 
         public LockBitmap CurrentImage;         // preprocessed Image
+        public Bitmap QuickReload;
         public LockBitmap ChangeBuffer;         
         public LockBitmap ResultImage;          // Latest WIP
 
@@ -29,25 +30,26 @@ namespace ImageHandler
             ChangeBuffer = new LockBitmap(new Bitmap(toLock));
             ResultImage = new LockBitmap(new Bitmap(toLock));     // result = new bitmap
             CurrentImage = ImageBuffer.getNextImage();
+            QuickReload = new Bitmap(CurrentImage.source);
         }
         public void LoadNextimageFromBuffer()
         {
             if (ImageBuffer.EndReached && ImageBuffer.Imagebuffer.Count == 0)
-            {
-                // TODO: show error
                 return;
-            }
             ImageBuffer.Save(ResultImage.source);
             while(ImageBuffer.Imagebuffer.Count == 0) { }
             Bitmap toLock = new Bitmap(ImageBuffer.getNextFile());
             CurrentImage = ImageBuffer.getNextImage();
+            QuickReload = new Bitmap(new Bitmap(CurrentImage.source));
             ChangeBuffer = new LockBitmap(new Bitmap(toLock));
             ResultImage = new LockBitmap(new Bitmap(toLock));
         }
         public void Reload()
         {
-            if(ImageBuffer != null)
-            Init(ImageBuffer.getCurrentfile());
+            if (ImageBuffer == null)
+                return;
+            CurrentImage = new LockBitmap(QuickReload);
+            ResultImage = new LockBitmap(new Bitmap(ImageBuffer.getCurrentfile()));
         }
 
         /// <summary>

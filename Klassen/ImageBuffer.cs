@@ -10,8 +10,8 @@ namespace ImageHandler
     class ImageBuffer
     {
         public static ImageHandler ImageHandler;
-        public Queue<LockBitmap> Imagebuffer = new Queue<LockBitmap>();
         public bool EndReached = false;
+        public Queue<LockBitmap> Imagebuffer = new Queue<LockBitmap>();
 
         private string FileDialogFileName;
         private string[] filevector;
@@ -80,7 +80,15 @@ namespace ImageHandler
         }
         public void Save(Bitmap bitmap)
         {
-            string savepath = Directory.GetCurrentDirectory() + @"\results";
+            string savepath;
+            if (Constants.SAVEPATH != "default") {
+                savepath = Constants.SAVEPATH;
+            }
+            else
+            {
+                savepath = Directory.GetCurrentDirectory() + @"\results";
+            }
+                
             if (!Directory.Exists(savepath))
                 Directory.CreateDirectory(savepath);
             savepath += "\\" + FileIndex.ToString() + ".png";
