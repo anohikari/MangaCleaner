@@ -8,13 +8,22 @@ namespace ImageHandler.Klassen
     /// </summary>
     public class SpeechBubble
     {
+        // References to the images currently used, instantiated at program start by UcImagehandler
         public static ImageHandler ImageHandler;
-        public static LockBitmap CurrentImage;   
+        public static LockBitmap CurrentImage;
 
+        public static HashSet<Rectangle> BoundingBoxes  = new HashSet<Rectangle>();
+
+        // Any speechbubble will be instantiated and recognised by a point handed to the constructor
         private Point InitPoint;
-        private int XMin, YMin = 10000;
+
+        // Bubbles boundary box for machine learning purposes
+        private int XMin = 10000; 
+        private int YMin = 10000;
         private int XMax, YMax = 0;
         private int Size = 0;
+
+        // Required for finding the rest of the bubbles content from the Initpoint
         private Queue<Point> RegionBoundary = new Queue<Point>();
         private Queue<Point> RegionTextPoints = new Queue<Point>();
 
@@ -28,6 +37,16 @@ namespace ImageHandler.Klassen
             CurrentImage.LockBits();
             ImageHandler.ResultImage.LockBits();
             Size++;
+
+            while (InitPoint.X < CurrentImage.Width && CurrentImage.GetPixel(InitPoint.X, InitPoint.Y).G == Color.Black.G)
+                InitPoint.X++;
+            if (CurrentImage.GetPixel(InitPoint.X, InitPoint.Y).G == Constants.MARKED.G)
+            {
+                CurrentImage.UnlockBits();
+                ImageHandler.ResultImage.UnlockBits();
+                return;
+            }
+
             ExtendRegion(InitPoint);
             while (RegionBoundary.Count > 0)
             {
@@ -44,8 +63,10 @@ namespace ImageHandler.Klassen
                     RegionBoundary.Dequeue();
             }
             DeleteText();
+            BoundingBoxes.Add(new Rectangle(XMin, YMin, XMax - XMin, YMax - YMin));
             CurrentImage.UnlockBits();
             ImageHandler.ResultImage.UnlockBits();
+
         }
         private bool CheckInbounds()
         {

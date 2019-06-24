@@ -7,9 +7,9 @@ using Emgu.CV.Structure;
 
 namespace ImageHandler.Klassen
 {
-    class SpeechBubbleDetector
+    class SpeechBubbleDetector : Interfaces.ISpeechBubbleDetector
     {
-        public List<SpeechBubble> Detect()
+        public List<SpeechBubble> DetectSpeechBubbles(string ImageFile)
         {
             List<SpeechBubble> DetectedBubbles = new List<SpeechBubble>();
             Mat img = CvInvoke.Imread("myimage.jpg", ImreadModes.AnyColor);

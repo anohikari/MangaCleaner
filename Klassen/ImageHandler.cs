@@ -9,7 +9,6 @@ namespace ImageHandler
     /// </summary>
     public class ImageHandler
     {
-        ImageBuffer ImageBuffer;
 
         public LockBitmap CurrentImage;         // preprocessed Image
         public Bitmap QuickReload;
@@ -19,6 +18,7 @@ namespace ImageHandler
         public byte LowerBound = 0;
         public byte UpperBound = 0;
 
+        private ImageBuffer ImageBuffer;
 
         public void Init(string FileSource)
         {
@@ -31,6 +31,8 @@ namespace ImageHandler
             ResultImage = new LockBitmap(new Bitmap(toLock));     // result = new bitmap
             CurrentImage = ImageBuffer.getNextImage();
             QuickReload = new Bitmap(CurrentImage.source);
+            Klassen.SpeechBubble.BoundingBoxes.Clear();
+            
         }
         public void LoadNextimageFromBuffer()
         {
@@ -43,6 +45,7 @@ namespace ImageHandler
             QuickReload = new Bitmap(new Bitmap(CurrentImage.source));
             ChangeBuffer = new LockBitmap(new Bitmap(toLock));
             ResultImage = new LockBitmap(new Bitmap(toLock));
+            Klassen.SpeechBubble.BoundingBoxes.Clear();
         }
         public void Reload()
         {

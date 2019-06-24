@@ -19,6 +19,7 @@ namespace ImageHandler
             InitializeComponent();
             ImageBuffer.BufferSizeChanged += CallMainThread;
             SpeechBubble.ImageHandler = ImageHandler;
+            SpeechBubble.CurrentImage = ImageHandler.CurrentImage;
             ImageBuffer.ImageHandler = ImageHandler;
             LblNoFile.Text = "Click here to load an image! \n Or Drag and Drop it onto the Form!";
             LblControlLevel.Text = "Note: You can also click left/right on any pixel to set it´s brightness as the lower/upper threshhold!";
@@ -111,7 +112,6 @@ namespace ImageHandler
         {
             ImageHandler.ResultImage = ImageHandler.ChangeBuffer;
             setImage(ImageHandler.ResultImage.source);
-            SpeechBubble.CurrentImage = ImageHandler.CurrentImage;
         }
 
         private void CmdReload_Click(object sender, EventArgs e)
