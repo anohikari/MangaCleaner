@@ -89,7 +89,7 @@ namespace ImageHandler.Klassen
             
 
             CurrentImage.SetPixel(p.X, p.Y, Constants.MARKED);
-            foreach (Point AdjacentPixel in getAdjacentPixels(p))
+            foreach (Point AdjacentPixel in GetAdjacentPixels(p))
             {
                 if (CurrentImage.GetPixel(AdjacentPixel.X, AdjacentPixel.Y).G == 255)
                 {
@@ -104,13 +104,15 @@ namespace ImageHandler.Klassen
             }
 
         }
-        List<Point> getAdjacentPixels
+        List<Point> GetAdjacentPixels
             (Point p) {
-            List<Point> Neighbours = new List<Point>();
-            Neighbours.Add(new Point(p.X + 1, p.Y));
-            Neighbours.Add(new Point(p.X - 1, p.Y));
-            Neighbours.Add(new Point(p.X, p.Y + 1));
-            Neighbours.Add(new Point(p.X, p.Y - 1));
+            List<Point> Neighbours = new List<Point>
+            {
+                new Point(p.X + 1, p.Y),
+                new Point(p.X - 1, p.Y),
+                new Point(p.X, p.Y + 1),
+                new Point(p.X, p.Y - 1)
+            };
             return Neighbours;
         }
 
@@ -156,10 +158,12 @@ namespace ImageHandler.Klassen
                     up = true;
                 if (p.Y - i > 0 && CurrentImage.GetPixel(p.X, p.Y - i).G == Constants.MARKED.G)
                     down = true;
-                if (p.Y + i < CurrentImage.Height && CurrentImage.GetPixel(p.X + i, p.Y + i).G == Constants.MARKED.G)
-                    UpRight = true;
-                if (p.Y - i > 0 && CurrentImage.GetPixel(p.X + i, p.Y - i).G == Constants.MARKED.G)
-                    DownRight = true;
+                if (p.Y + i < CurrentImage.Height && p.Y + i < CurrentImage.Width)
+                    if(CurrentImage.GetPixel(p.X + i, p.Y + i).G == Constants.MARKED.G)
+                        UpRight = true;
+                if (p.Y - i > 0 && p.X + i < CurrentImage.Width)
+                    if(CurrentImage.GetPixel(p.X + i, p.Y - i).G == Constants.MARKED.G)
+                        DownRight = true;
 
 
             }
