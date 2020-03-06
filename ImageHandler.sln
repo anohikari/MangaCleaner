@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29001.49
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHandler", "ImageHandler.csproj", "{484DF438-FD91-47A3-B2A2-1D1A77A986DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHandla", "..\ImageHandla\ImageHandla.csproj", "{775629ED-D1BF-4113-838B-C2A75A81B153}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MangaCleaner", "..\ImageHandla\MangaCleaner.csproj", "{775629ED-D1BF-4113-838B-C2A75A81B153}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
