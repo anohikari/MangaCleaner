@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29001.49
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImageHandler", "ImageHandler.csproj", "{484DF438-FD91-47A3-B2A2-1D1A77A986DA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MangaCleaner", "..\ImageHandla\MangaCleaner.csproj", "{775629ED-D1BF-4113-838B-C2A75A81B153}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MangaCleaner", "ImageHandla\MangaCleaner.csproj", "{A03036DF-436C-4B8D-A96D-B5C5F48FE130}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{484DF438-FD91-47A3-B2A2-1D1A77A986DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{484DF438-FD91-47A3-B2A2-1D1A77A986DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{484DF438-FD91-47A3-B2A2-1D1A77A986DA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{775629ED-D1BF-4113-838B-C2A75A81B153}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{775629ED-D1BF-4113-838B-C2A75A81B153}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{775629ED-D1BF-4113-838B-C2A75A81B153}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{775629ED-D1BF-4113-838B-C2A75A81B153}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A03036DF-436C-4B8D-A96D-B5C5F48FE130}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A03036DF-436C-4B8D-A96D-B5C5F48FE130}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A03036DF-436C-4B8D-A96D-B5C5F48FE130}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A03036DF-436C-4B8D-A96D-B5C5F48FE130}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

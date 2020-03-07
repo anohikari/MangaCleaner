@@ -1,0 +1,14 @@
+﻿
+Ribbon
+Startup Dialog
+Drag Drop
+Recently Used 
+Preloading Images
+
+
+Speechbubble Clearing
+Display Cleared Bubbles
+
+Auto Detect Bubbles
+
+open with...
