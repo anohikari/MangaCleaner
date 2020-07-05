@@ -179,7 +179,7 @@ namespace MangaCleaner
                     up = true;
                 if (p.Y - i > 0 && parser.GetPixel(p.X, p.Y - i).G == Constants.MARKED.G)
                     down = true;
-                if (p.Y + i < ParentImage.PixelHeight && p.Y + i < ParentImage.PixelWidth)
+                if (p.Y + i < ParentImage.PixelHeight && p.X + i < ParentImage.PixelWidth)
                     if (parser.GetPixel(p.X + i, p.Y + i).G == Constants.MARKED.G)
                         UpRight = true;
                 if (p.Y - i > 0 && p.X + i < ParentImage.PixelWidth)

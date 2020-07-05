@@ -85,7 +85,23 @@ namespace MangaCleaner
             mainWindow.PreviousImageButton.Click += PreviousImage_Click;
             mainWindow.LoadImageButton.Click += LoadImage;
             mainWindow.InternalImageToggle.Click += (object sender, RoutedEventArgs e) => RaisePropertyChanged("VisibleImage");
+            mainWindow.Undo.Click += Undo_Click;
+            mainWindow.Reload.Click += Reload_Click;
             MainWindow = mainWindow;
+        }
+
+        private string LastLoadedImagePath = "";
+        private void Reload_Click(object sender, RoutedEventArgs e)
+        {
+            if(LastLoadedImagePath != "")
+            {
+                CurrentImage = new WriteableBitmap(new BitmapImage(new Uri(LastLoadedImagePath)));
+            }
+        }
+
+        private void Undo_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void LoadImage(object sender, RoutedEventArgs e)

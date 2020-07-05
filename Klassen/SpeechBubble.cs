@@ -159,7 +159,7 @@ namespace ImageHandler.Klassen
                     up = true;
                 if (p.Y - i > 0 && CurrentImage.GetPixel(p.X, p.Y - i).G == Constants.MARKED.G)
                     down = true;
-                if (p.Y + i < CurrentImage.Height && p.Y + i < CurrentImage.Width)
+                if (p.Y + i < CurrentImage.Height && p.X + i < CurrentImage.Width)
                     if (CurrentImage.GetPixel(p.X + i, p.Y + i).G == Constants.MARKED.G)
                         UpRight = true;
                 if (p.Y - i > 0 && p.X + i < CurrentImage.Width)

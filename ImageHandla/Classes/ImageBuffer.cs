@@ -19,7 +19,7 @@ namespace MangaCleaner
         public static event Action<int> BufferSizeChanged;
 
         /// <summary>
-        /// Windows function for sorting strings like in the fielsystem
+        /// Windows function for sorting strings like in the filesystem
         /// </summary>
         /// <param name="psz1"></param>
         /// <param name="psz2"></param>
