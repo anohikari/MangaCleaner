@@ -1,6 +1,7 @@
 ﻿using MangaCleaner.Classes;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -15,6 +16,7 @@ namespace MangaCleaner
         WriteableBitmap ParentImage;
         WriteableBitmap ResultImage;
         Parser parser;
+        Color MarkingColor = Constants.MARKED;
 
         // Any speechbubble will be instantiated and recognised by a point handed to the constructor
         private Point InitPoint;
@@ -52,7 +54,7 @@ namespace MangaCleaner
 
                 while (parser.X < ParentImage.Width && parser.Red == 0)
                     parser.X++;
-                if (parser.Green == Constants.MARKED.G)
+                if (Constants.MarkingColors.Where(x => x.G == parser.Green).Any())
                 {
                     ParentImage.Unlock();
                     return;
@@ -101,14 +103,14 @@ namespace MangaCleaner
                 YMin = (int)p.Y;
 
 
-            parser.SetPixel(p, Constants.MARKED);
+            parser.SetPixel(p, MarkingColor);
             foreach (Point AdjacentPixel in GetAdjacentPixels(p))
             {
                 parser.Point = AdjacentPixel;
                 if (parser.Blue == 255)
                 {
                     RegionBoundary.Enqueue(AdjacentPixel);
-                    parser.SetPixel(Constants.MARKED);
+                    parser.SetPixel(MarkingColor);
                     //ImageHandler.ResultImage.SetPixel(AdjacentPixel.X, AdjacentPixel.Y, Color.White);
                 }
                 if (parser.Red == 0)
@@ -144,13 +146,12 @@ namespace MangaCleaner
                 {
                     for (int i = 0; p.X + i < XMax; i++)
                     {
-                        if (parser.GetPixel(p.X + i, p.Y).G == Constants.MARKED.G)
+                        if (parser.GetPixel(p.X + i, p.Y).G == MarkingColor.G)
                         {
                             for (int j = 0; j <= i; j++)
                             {
                                 parser.SetPixel((int)(p.X + j),(int) p.Y, Colors.White);
                                 ResultParser.SetPixel((int)(p.X + j), (int)p.Y, Colors.White);
-                                //ImageHandler.ResultImage.SetPixel(p.X + j, p.Y, Color.White);
                             }
                             i = ParentImage.PixelWidth;
                         }
@@ -174,20 +175,30 @@ namespace MangaCleaner
             up = down = right = UpRight = DownRight = false;
             for (int i = 0; i < Constants.CORNER_CHECK_LIMIT; i++)
             {
-                if (p.X + i < ParentImage.PixelWidth && parser.GetPixel(p.X + i, p.Y).G == Constants.MARKED.G)
+                if (p.X + i < ParentImage.PixelWidth && parser.GetPixel(p.X + i, p.Y).G == MarkingColor.G)
                     right = true;
-                if (p.Y + i < ParentImage.PixelHeight && parser.GetPixel(p.X, p.Y + i).G == Constants.MARKED.G)
+                if (p.Y + i < ParentImage.PixelHeight && parser.GetPixel(p.X, p.Y + i).G == MarkingColor.G)
                     up = true;
-                if (p.Y - i > 0 && parser.GetPixel(p.X, p.Y - i).G == Constants.MARKED.G)
+                if (p.Y - i > 0 && parser.GetPixel(p.X, p.Y - i).G == MarkingColor.G)
                     down = true;
                 if (p.Y + i < ParentImage.PixelHeight && p.X + i < ParentImage.PixelWidth)
-                    if (parser.GetPixel(p.X + i, p.Y + i).G == Constants.MARKED.G)
+                {
+                    if (parser.GetPixel(p.X + i, p.Y + i).G == MarkingColor.G)
+                    {
                         UpRight = true;
+                    }
+                }
                 if (p.Y - i > 0 && p.X + i < ParentImage.PixelWidth)
-                    if (parser.GetPixel(p.X + i, p.Y - i).G == Constants.MARKED.G)
+                {
+                    if (parser.GetPixel(p.X + i, p.Y - i).G == MarkingColor.G)
+                    {
                         DownRight = true;
+                    }
+                }
+                if (up && down && right && UpRight && DownRight)
+                    return false;
             }
-            return (!(up && down && right && UpRight));
+            return (!(up && down && right && UpRight && DownRight));
         }
     }
 }
