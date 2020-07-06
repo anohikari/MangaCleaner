@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:sys="clr-namespace:System;assembly=System.Runtime"
         xmlns:local="clr-namespace:MangaCleaner"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
+        mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=local:Model}"
+        Title="MainWindow" Height="900" Width="800"
         Loaded="Window_Loaded">
     <Grid>
         <Grid.Resources>
@@ -47,6 +47,7 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <ToggleButton x:Name="InternalImageToggle" IsChecked="False" Margin="{StaticResource MarginValue}" Grid.Row="0">
                 <TextBlock HorizontalAlignment="Center">
@@ -54,34 +55,30 @@
                     internal image
                 </TextBlock>
             </ToggleButton>
-            <StackPanel Orientation="Horizontal" Grid.Row="1">
-                <Button x:Name="Undo" Margin="{StaticResource MarginValue}">
-                    <TextBlock HorizontalAlignment="Center">
-                        Undo <LineBreak/>
-                        last change
-                    </TextBlock>
-                </Button>
-                <Button x:Name="Reload" Margin="{StaticResource MarginValue}">
-                    <TextBlock HorizontalAlignment="Center">
-                        Reload <LineBreak/>
-                        current image
-                    </TextBlock>
-                </Button>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal" Grid.Row="2">
-                <Button x:Name="NextImageButton" Margin="{StaticResource MarginValue}">
-                    <TextBlock TextWrapping="Wrap">
-                        Next image <LineBreak/>
-                        from directory
-                    </TextBlock>
-                </Button>
-                <Button x:Name="PreviousImageButton" Margin="{StaticResource MarginValue}">
-                    <TextBlock  TextWrapping="Wrap">
-                        Previous Image <LineBreak/>
-                        from directory
-                    </TextBlock>
-                </Button>
-            </StackPanel>
+            <Button x:Name="Undo" Margin="{StaticResource MarginValue}" Visibility="{Binding ImageVisible}" Grid.Row="1">
+                <TextBlock HorizontalAlignment="Center">
+                    Undo <LineBreak/>
+                    last change
+                </TextBlock>
+            </Button>
+            <Button x:Name="Reload" Margin="{StaticResource MarginValue}" Visibility="{Binding ImageVisible}" Grid.Row="1"  Grid.Column="1">
+                <TextBlock HorizontalAlignment="Center">
+                    Reload <LineBreak/>
+                    current image
+                </TextBlock>
+            </Button>
+            <Button x:Name="PreviousImageButton" Margin="{StaticResource MarginValue}" Visibility="{Binding ImageVisible}" Grid.Row="2">
+                <TextBlock  TextWrapping="Wrap">
+                    Previous Image <LineBreak/>
+                    from directory
+                </TextBlock>
+            </Button>
+            <Button x:Name="NextImageButton" Margin="{StaticResource MarginValue}" Visibility="{Binding ImageVisible}" Grid.Row="2" Grid.Column="1">
+                <TextBlock TextWrapping="Wrap">
+                    Next image <LineBreak/>
+                    from directory
+                </TextBlock>
+            </Button>
         </Grid>
     </Grid>
 </Window>

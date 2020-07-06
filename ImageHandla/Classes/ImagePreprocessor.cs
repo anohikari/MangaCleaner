@@ -7,11 +7,8 @@ namespace MangaCleaner
 {
     class ImagePreprocessor
     {
-        WriteableBitmap Image;
-
         unsafe public void FlattenImage(ref WriteableBitmap Image)
         {
-            int Color;
             int Red;
             int Green;
             int Blue;

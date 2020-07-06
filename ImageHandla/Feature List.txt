@@ -1,5 +1,4 @@
-﻿
-Ribbon
+﻿saving images
 Startup Dialog
 Drag Drop
 Recently Used 

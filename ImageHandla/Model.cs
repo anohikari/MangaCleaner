@@ -16,8 +16,10 @@ namespace MangaCleaner
 
         MainWindow MainWindow;
         ImagePreprocessor ImagePreProcessor = new ImagePreprocessor();
-        ImageBuffer ImageBuffer = null;
+        FileManager ImageBuffer = null;
+        OpenFileDialog openFileDialog = new OpenFileDialog();
 
+        private string LastLoadedImagePath = "";
         List<SpeechBubble> speechBubbles = new List<SpeechBubble>();
 
         public WriteableBitmap VisibleImage
@@ -42,7 +44,7 @@ namespace MangaCleaner
                         currentImageInternal = new WriteableBitmap( new FormatConvertedBitmap(currentImageInternal, PixelFormats.Bgr32, null, 0));
                     }
                     ImagePreProcessor.FlattenImage(ref currentImageInternal);
-                    ImageLoaded = true;
+                    ImageVisible = Visibility.Visible;
                     RaisePropertyChanged("VisibleImage");
                 }
             }
@@ -61,18 +63,16 @@ namespace MangaCleaner
             }
         }
 
-
-        private bool imageLoaded = true;
-        public bool ImageLoaded
+        private bool imageLoaded = false;
+        public Visibility ImageVisible
         {
-            get { return imageLoaded; }
+            get => imageLoaded ? Visibility.Visible : Visibility.Hidden;
             set
             {
-                imageLoaded = value;
-                RaisePropertyChanged("ImageLoaded");
+                imageLoaded = value == Visibility.Visible;
+                RaisePropertyChanged("ImageVisible");
             }
         }
-
 
         public Model(MainWindow mainWindow)
         {
@@ -90,7 +90,6 @@ namespace MangaCleaner
             MainWindow = mainWindow;
         }
 
-        private string LastLoadedImagePath = "";
         private void Reload_Click(object sender, RoutedEventArgs e)
         {
             if(LastLoadedImagePath != "")
@@ -106,16 +105,16 @@ namespace MangaCleaner
 
         private void LoadImage(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
             if(openFileDialog.ShowDialog() == true)
             {
                 CurrentImage = new WriteableBitmap(new BitmapImage(new Uri(openFileDialog.FileName)));
-                ImageBuffer = new ImageBuffer(openFileDialog.FileName);
+                ImageBuffer = new FileManager(openFileDialog.FileName);
+                LastLoadedImagePath = openFileDialog.FileName;
             }
         }
         private void Image_Click(object sender, MouseButtonEventArgs e)
         {
-            if (!ImageLoaded) { return; }
+            if (!imageLoaded) { return; }
             Point p = e.GetPosition(((Image)sender));
             double relativeHeight = ((Image)sender).ActualHeight;
             double relativeWidth = ((Image)sender).ActualWidth;
@@ -129,13 +128,20 @@ namespace MangaCleaner
 
         private void NextImage_Click(object sender, RoutedEventArgs e)
         {
+            ImageBuffer.Save(currentImage);
             if(ImageBuffer != null)
-                CurrentImage = new WriteableBitmap(new BitmapImage(new Uri(ImageBuffer.getNextFile())));
+            {
+                LastLoadedImagePath = ImageBuffer.getNextFile();
+                CurrentImage = new WriteableBitmap(new BitmapImage(new Uri(LastLoadedImagePath)));
+            }
         }
         private void PreviousImage_Click(object sender, RoutedEventArgs e)
         {
             if (ImageBuffer != null)
-                CurrentImage = new WriteableBitmap(new BitmapImage(new Uri(ImageBuffer.getPreviousFile())));
+            {
+                LastLoadedImagePath = ImageBuffer.getPreviousFile();
+                CurrentImage = new WriteableBitmap(new BitmapImage(new Uri(LastLoadedImagePath)));
+            }
         }
 
         #region INotifyPropertyChanged
