@@ -1,13 +1,18 @@
-﻿saving images
+﻿check all white pixels within the bubble boundary if they are surrounded
+
+
+//saving images
 Startup Dialog
 Drag Drop
 Recently Used 
+react to image dimensions
+tooltip
 Preloading Images
 
-
-Speechbubble Clearing
+//Speechbubble Clearing
 Display Cleared Bubbles
 
 Auto Detect Bubbles
+
 
 open with...

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
@@ -8,13 +9,14 @@ namespace MangaCleaner
 {
     class FileManager
     {
-        //public static ImageHandler ImageHandler;
         public bool EndReached = false;
 
         private string currentDirectory = "";
         private string FileDialogFileName;
         private string[] filevector;
         private int FileIndex = 0;
+
+        public object Current => throw new NotImplementedException();
 
         public static event Action<int> BufferSizeChanged;
 
@@ -33,7 +35,7 @@ namespace MangaCleaner
             FileDialogFileName = FileSource;
             FillBuffer();
         }
-        public void FillBuffer()
+        private void FillBuffer()
         {
             filevector = Directory.GetFiles(Path.GetDirectoryName(FileDialogFileName));
             Array.Sort(filevector,StrCmpLogicalW);
@@ -78,7 +80,7 @@ namespace MangaCleaner
             savepath += "\\" + FileIndex.ToString() + ".png";
             using (var fileStream = new FileStream(savepath, FileMode.Create))
             {
-                BitmapEncoder encoder = new PngBitmapEncoder();
+                var encoder = new PngBitmapEncoder();
                 encoder.Frames.Add(BitmapFrame.Create(bitmap));
                 encoder.Save(fileStream);
             }

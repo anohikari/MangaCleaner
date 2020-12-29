@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -13,21 +12,16 @@ namespace MangaCleaner
 {
     class Model : INotifyPropertyChanged
     {
-
-        MainWindow MainWindow;
-        ImagePreprocessor ImagePreProcessor = new ImagePreprocessor();
-        FileManager ImageBuffer = null;
-        OpenFileDialog openFileDialog = new OpenFileDialog();
+        private ImagePreprocessor ImagePreProcessor = new ImagePreprocessor();
+        private FileManager ImageBuffer = null;
+        private OpenFileDialog openFileDialog = new OpenFileDialog();
 
         private string LastLoadedImagePath = "";
         List<SpeechBubble> speechBubbles = new List<SpeechBubble>();
 
         public WriteableBitmap VisibleImage
         {
-            get
-            {
-                return MainWindow.InternalImageToggle.IsChecked == true ? currentImageInternal : currentImage;
-            }
+            get => ShowInternalImage ? currentImageInternal : currentImage;
         }
 
         private WriteableBitmap currentImage;
@@ -35,7 +29,7 @@ namespace MangaCleaner
         {
             set
             {
-                currentImage = new WriteableBitmap(new FormatConvertedBitmap(value, PixelFormats.Bgr32, null, 0)); ;
+                currentImage = new WriteableBitmap(new FormatConvertedBitmap(value, PixelFormats.Bgr32, null, 0));
                 if (value != null)
                 {
                     CurrentImageInternal = currentImage.Clone();
@@ -43,7 +37,7 @@ namespace MangaCleaner
                     {
                         currentImageInternal = new WriteableBitmap( new FormatConvertedBitmap(currentImageInternal, PixelFormats.Bgr32, null, 0));
                     }
-                    ImagePreProcessor.FlattenImage(ref currentImageInternal);
+                    ImagePreProcessor.FlattenImage(currentImageInternal);
                     ImageVisible = Visibility.Visible;
                     RaisePropertyChanged("VisibleImage");
                 }
@@ -56,10 +50,22 @@ namespace MangaCleaner
             set
             {
                 currentImageInternal = value;
-                if (MainWindow.InternalImageToggle.IsChecked == true)
+                if (ShowInternalImage)
                 {
                     RaisePropertyChanged("VisibleImage");
                 }
+            }
+        }
+
+        private bool showInternalImage = false;
+        public bool ShowInternalImage
+        {
+            get => showInternalImage;
+            set
+            {
+                showInternalImage = value;
+                RaisePropertyChanged("ShowInternalImage");
+                RaisePropertyChanged("VisibleImage");
             }
         }
 
@@ -73,24 +79,34 @@ namespace MangaCleaner
                 RaisePropertyChanged("ImageVisible");
             }
         }
+        public ICommand NextImage { get; private set; }
+        public ICommand PreviousImage { get; private set; }
+        public ICommand LoadImages { get; private set; }
+        public ICommand Undo { get; private set; }
+        public ICommand Reload { get; private set; }
 
         public Model(MainWindow mainWindow)
         {
             SubscribeEvents(mainWindow);
-        }
-        private void SubscribeEvents(MainWindow mainWindow)
-        {
-            mainWindow.MainImage.MouseUp += Image_Click;
-            mainWindow.NextImageButton.Click += NextImage_Click;
-            mainWindow.PreviousImageButton.Click += PreviousImage_Click;
-            mainWindow.LoadImageButton.Click += LoadImage;
-            mainWindow.InternalImageToggle.Click += (object sender, RoutedEventArgs e) => RaisePropertyChanged("VisibleImage");
-            mainWindow.Undo.Click += Undo_Click;
-            mainWindow.Reload.Click += Reload_Click;
-            MainWindow = mainWindow;
+            InitializeCommands();
         }
 
-        private void Reload_Click(object sender, RoutedEventArgs e)
+        private void InitializeCommands()
+        {
+            NextImage = new RelayCommand(NextImage_Click);
+            PreviousImage = new RelayCommand(PreviousImage_Click);
+            LoadImages = new RelayCommand(LoadImage);
+            Undo = new RelayCommand(Undo_Click);
+            Reload = new RelayCommand(Reload_Click);
+        }
+
+        private void SubscribeEvents(MainWindow mainWindow)
+        {
+            // TODO: get the mousebuttoneventargs....
+            mainWindow.MainImage.MouseUp += Image_Click;
+        }
+
+        private void Reload_Click()
         {
             if(LastLoadedImagePath != "")
             {
@@ -98,12 +114,12 @@ namespace MangaCleaner
             }
         }
 
-        private void Undo_Click(object sender, RoutedEventArgs e)
+        private void Undo_Click()
         {
-            throw new NotImplementedException();
+            //TODO: Implement
         }
 
-        private void LoadImage(object sender, RoutedEventArgs e)
+        private void LoadImage()
         {
             if(openFileDialog.ShowDialog() == true)
             {
@@ -112,21 +128,26 @@ namespace MangaCleaner
                 LastLoadedImagePath = openFileDialog.FileName;
             }
         }
-        private void Image_Click(object sender, MouseButtonEventArgs e)
+        private void Image_Click(object sender, MouseButtonEventArgs e) 
         {
             if (!imageLoaded) { return; }
-            Point p = e.GetPosition(((Image)sender));
-            double relativeHeight = ((Image)sender).ActualHeight;
-            double relativeWidth = ((Image)sender).ActualWidth;
-            Point AbsolutePoint = new Point(
-                VisibleImage.PixelHeight / relativeHeight * p.X,
-                VisibleImage.PixelWidth / relativeWidth * p.Y);
-            SpeechBubble newBubble = new SpeechBubble(ref currentImageInternal, ref currentImage ,AbsolutePoint);
+            var AbsolutePoint = GetAbsoluteClicklocation((sender as Image), e);
+            SpeechBubble newBubble = new SpeechBubble(currentImageInternal, currentImage, AbsolutePoint);
             newBubble.CleanBubble();
             speechBubbles.Add(newBubble);
         }
 
-        private void NextImage_Click(object sender, RoutedEventArgs e)
+        private Point GetAbsoluteClicklocation(Image image, MouseButtonEventArgs e)
+        {
+            var p = e.GetPosition(image);
+            var relativeHeight = image.ActualHeight;
+            var relativeWidth = image.ActualWidth;
+            return new Point(
+                VisibleImage.PixelHeight / relativeHeight * p.X,
+                VisibleImage.PixelWidth / relativeWidth * p.Y);
+        }
+
+        private void NextImage_Click()
         {
             ImageBuffer.Save(currentImage);
             if(ImageBuffer != null)
@@ -135,7 +156,7 @@ namespace MangaCleaner
                 CurrentImage = new WriteableBitmap(new BitmapImage(new Uri(LastLoadedImagePath)));
             }
         }
-        private void PreviousImage_Click(object sender, RoutedEventArgs e)
+        private void PreviousImage_Click()
         {
             if (ImageBuffer != null)
             {

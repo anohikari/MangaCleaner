@@ -7,16 +7,22 @@ namespace MangaCleaner
 {
     class ImagePreprocessor
     {
-        unsafe public void FlattenImage(ref WriteableBitmap Image)
+        private int Black = (0 << 16)   // R
+                          | (0 << 8)    // G
+                          | (0 << 0);   // B
+        private int White = (255 << 16) // R
+                          | (255 << 8)  // G
+                          | (255 << 0); // B
+        unsafe public void FlattenImage(WriteableBitmap Image)
         {
             int Red;
             int Green;
             int Blue;
             int Brightness;
 
-            IntPtr pBackBuffer = Image.BackBuffer;
-            byte* pBuffer = (byte*)pBackBuffer.ToPointer();
-            int BufferSize = CalculateBackBufferSize(Image);
+            var pBackBuffer = Image.BackBuffer;
+            var pBuffer = (byte*)pBackBuffer.ToPointer();
+            var BufferSize = CalculateBackBufferSize(Image);
 
             Image.Lock();
             for (int i = 0; i < BufferSize; i += 4)
@@ -37,11 +43,5 @@ namespace MangaCleaner
             return bitmap.PixelHeight * bitmap.BackBufferStride ;
         }
 
-        int Black = (0 << 16) // R
-                   | (0 << 8)   // G
-                   | (0 << 0);   // B
-        int White = (255 << 16) // R
-                   | (255 << 8)   // G
-                   | (255 << 0);   // B
     }
 }
