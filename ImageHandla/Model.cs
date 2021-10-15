@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -88,6 +89,7 @@ namespace MangaCleaner
         public ICommand Redo { get; private set; }
         public ICommand Reload { get; private set; }
         public ICommand ShowResults { get; private set; }
+        public ICommand OCR { get; private set; }
 
         public Model()
         {
@@ -98,6 +100,7 @@ namespace MangaCleaner
             Redo = new RelayCommand(RedoCommand);
             Reload = new RelayCommand(Reload_Click);
             ShowResults = new RelayCommand(ShowResults_Click);
+            OCR = new AsyncCommand(CallOCRAPI);
         }
 
         private void Reload_Click()
@@ -120,18 +123,11 @@ namespace MangaCleaner
             OnPropertyChanged(nameof(VisibleImage));
         }
 
-        PointCollection points = null;
         private async void LoadImage()
         {
             if (OpenfileDialog.ShowDialog() == true)
             {
                 LoadImage(OpenfileDialog.FileName);
-                points = await FreeOCRWrapper.OCR(OpenfileDialog.FileName);
-                foreach (var point in points)
-                {
-                    var newBubble = new SpeechBubble(currentImageInternal, currentImage, point);
-                    newBubble.CleanBubble();
-                }
             }
         }
 
@@ -180,7 +176,7 @@ namespace MangaCleaner
         private void NextImage_Click()
         {
             FileManager.Save(currentImage);
-            if (FileManager != null)
+            if (FileManager is null)
                 return;
             LastLoadedImagePath = FileManager.getNextFile();
             CurrentImage = new WriteableBitmap(new BitmapImage(new Uri(LastLoadedImagePath)));
@@ -196,6 +192,16 @@ namespace MangaCleaner
         private void ShowResults_Click()
         {
             Process.Start("explorer.exe", FileManager.GetSaveDirectory());
+        }
+
+        private async Task CallOCRAPI()
+        {
+            var points = await FreeOCRWrapper.OCR(LastLoadedImagePath);
+            foreach (var point in points)
+            {
+                var newBubble = new SpeechBubble(currentImageInternal, currentImage, point);
+                newBubble.CleanBubble();
+            }
         }
     }
 }

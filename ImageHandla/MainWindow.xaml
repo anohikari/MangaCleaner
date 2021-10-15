@@ -60,12 +60,22 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <ToggleButton x:Name="InternalImageToggle" Command="{Binding to}" IsChecked="{Binding ShowInternalImage}" Margin="{StaticResource MarginValue}" Grid.Row="0">
+            <ToggleButton x:Name="InternalImageToggle" IsChecked="{Binding ShowInternalImage}" Margin="{StaticResource MarginValue}" Grid.Row="0">
                 <TextBlock HorizontalAlignment="Center">
                     Show<LineBreak/>
                     internal image
                 </TextBlock>
             </ToggleButton>
+            <Button x:Name="OCRButton" Command="{Binding OCR}" Margin="{StaticResource MarginValue}"
+                    Visibility="{Binding ImageVisible}" Grid.Row="0" Grid.Column="1">
+                <TextBlock HorizontalAlignment="Center">
+                    Auto detect  <LineBreak/>
+                    speechbubbles <LineBreak/>
+                    using optical <LineBreak/>
+                    character recognition <LineBreak/>
+                    (experimental)
+                </TextBlock>
+            </Button>
             <Button x:Name="Undo" Margin="{StaticResource MarginValue}" 
                     Visibility="{Binding ImageVisible}" Command="{Binding Undo}" Grid.Row="1">
                 <TextBlock HorizontalAlignment="Center">
