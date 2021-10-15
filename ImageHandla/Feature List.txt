@@ -1,18 +1,19 @@
-﻿check all white pixels within the bubble boundary if they are surrounded
+﻿//check all white pixels within the bubble boundary if they are surrounded
+remember edges as such
 
 
 //saving images
 Startup Dialog
-Drag Drop
+//Drag Drop
 Recently Used 
-react to image dimensions
 tooltip
 Preloading Images
 
 //Speechbubble Clearing
 Display Cleared Bubbles
 
-Auto Detect Bubbles
+//Auto Detect Bubbles
+show results and allow filtering before application
+of ocr results
 
-
-open with...
+web solution

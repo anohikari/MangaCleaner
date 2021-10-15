@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MangaCleaner.Interfaces
 {
-    interface UndoRedoOperation
+    interface IUndoAble
     {
         void Undo();
         void Redo();

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows.Media.Imaging;
@@ -16,9 +14,6 @@ namespace MangaCleaner
         private string[] filevector;
         private int FileIndex = 0;
 
-        public object Current => throw new NotImplementedException();
-
-        public static event Action<int> BufferSizeChanged;
 
         /// <summary>
         /// Windows function for sorting strings like in the filesystem
@@ -64,16 +59,7 @@ namespace MangaCleaner
 
         public void Save(WriteableBitmap bitmap)
         {
-            string savepath;
-            if (Constants.SAVEPATH != "default")
-            {
-                savepath = Constants.SAVEPATH;
-            }
-            else
-            {
-                savepath = currentDirectory + @"\results";
-            }
-
+            var savepath = GetSaveDirectory();
             if (!Directory.Exists(savepath))
                 Directory.CreateDirectory(savepath);
 
@@ -84,6 +70,13 @@ namespace MangaCleaner
                 encoder.Frames.Add(BitmapFrame.Create(bitmap));
                 encoder.Save(fileStream);
             }
+        }
+
+        internal string GetSaveDirectory()
+        {
+            return Constants.SAVEPATH == "default" ?
+                currentDirectory + @"\results" :
+                Constants.SAVEPATH;
         }
     }
 }

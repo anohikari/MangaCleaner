@@ -8,7 +8,7 @@
         mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=local:Model}"
         Title="MainWindow" Height="900" Width="800"
         Loaded="Window_Loaded">
-    <Grid>
+    <Grid Drop="Grid_Drop" AllowDrop="True">
         <Grid.Resources>
             <Thickness x:Key="MarginValue" Left="14" Top="14" Right="14" Bottom="14"/>
         </Grid.Resources>
@@ -17,6 +17,9 @@
             <ColumnDefinition Width="20"/>
             <ColumnDefinition Width="Auto" MaxWidth="300"/>
         </Grid.ColumnDefinitions>
+        <Grid.InputBindings>
+            <KeyBinding Key="Z" Modifiers="Ctrl" Command="{Binding Redo}"/>
+        </Grid.InputBindings>
         <Button x:Name="LoadImageButton" Content="Click here to load an image or directory" Command="{Binding LoadImages}"
                 Background="White" Visibility="{Binding ShowLoadDialog}" Grid.Column="0" IsHitTestVisible="True">
             <Button.Style>
@@ -29,7 +32,7 @@
                 </Style>
             </Button.Style>
         </Button>
-        <Image x:Name="MainImage" Source="{Binding VisibleImage}" Visibility="{Binding ShowImage}" Grid.Column="0">
+        <Image x:Name="MainImage" Source="{Binding VisibleImage}" MouseDown="MainImage_MouseDown" Visibility="{Binding ShowImage}" Grid.Column="0">
             <Image.InputBindings>
                 <MouseBinding MouseAction="LeftClick" 
                               Command="{Binding ImageClick}" 
@@ -37,7 +40,7 @@
             </Image.InputBindings>
         </Image>
         <ToggleButton x:Name="ShowOptions" Grid.Column="1"/>
-        <Grid x:Name="Heins" Grid.Column="2">
+        <Grid Grid.Column="2">
             <Grid.Style>
                 <Style TargetType="Grid">
                     <Style.Triggers>
@@ -48,6 +51,7 @@
                 </Style>
             </Grid.Style>
             <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
                 <RowDefinition Height="1*"/>
@@ -88,6 +92,13 @@
                 <TextBlock TextWrapping="Wrap">
                     Next image <LineBreak/>
                     from directory
+                </TextBlock>
+            </Button>
+            <Button  Margin="{StaticResource MarginValue}" 
+                     Visibility="{Binding ImageVisible}" Command="{Binding ShowResults}" 
+                     Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2">
+                <TextBlock TextWrapping="Wrap">
+                    Show results
                 </TextBlock>
             </Button>
         </Grid>

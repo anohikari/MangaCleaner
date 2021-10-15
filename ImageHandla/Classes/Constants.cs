@@ -5,13 +5,13 @@ namespace MangaCleaner
 {
     static class Constants
     {
-        public static int BUFFERSIZE = 5;
-        public static int FLATTENING_THRESHHOLD = 230;
-        public static int BUBBLE_MAX_SIZE = 1000000;
-        public static int CORNER_CHECK_LIMIT = 200;
-        public static int GROUPING_MAX_DISTANCE = 1;
-        public static string SAVEPATH = "default";
-        public static bool MakeTrainingData = false;
+        public const int BUFFERSIZE = 5;
+        public const int FLATTENING_THRESHHOLD = 230;
+        public const int BUBBLE_MAX_SIZE = 1000000;
+        public const int CORNER_CHECK_LIMIT = 200;
+        public const int GROUPING_MAX_DISTANCE = 5;
+        public const string SAVEPATH = "default";
+        public const bool MakeTrainingData = false;
         public static Color MARKED
         {
             get
@@ -24,7 +24,7 @@ namespace MangaCleaner
                 return ColorEnumerator.Current; 
             }
         }
-        public static List<Color> MarkingColors = new List<Color>() { Colors.Pink, Colors.CadetBlue, Colors.PaleVioletRed };
-        public static IEnumerator<Color> ColorEnumerator = MarkingColors.GetEnumerator();
+        public readonly static List<Color> MarkingColors = new List<Color>() { Colors.Pink, Colors.CadetBlue, Colors.PaleVioletRed };
+        private readonly static IEnumerator<Color> ColorEnumerator = MarkingColors.GetEnumerator();
     }
 }

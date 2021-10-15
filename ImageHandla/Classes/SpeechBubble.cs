@@ -13,7 +13,7 @@ namespace MangaCleaner
     /// </summary>
     public unsafe class SpeechBubble
     {
-        private WriteableBitmap ParentImage;
+        private WriteableBitmap InternalImage;
         private WriteableBitmap ResultImage;
         private ImageAccessor ImageAccessor;
         private Color MarkingColor = Constants.MARKED;
@@ -35,25 +35,25 @@ namespace MangaCleaner
         private Queue<Point> RegionBoundary = new Queue<Point>();
         private Queue<Point> RegionTextPoints = new Queue<Point>();
 
-        public SpeechBubble(WriteableBitmap Image, WriteableBitmap resImage, Point position)
+        public SpeechBubble(WriteableBitmap internalImage, WriteableBitmap resultImage, Point position)
         {
-            InitPoint = new Point((int)position.X,(int)position.Y);
-            ParentImage = Image;
-            ResultImage = resImage;
-            ImageAccessor = new ImageAccessor((byte*)ParentImage.BackBuffer.ToPointer(), ParentImage.BackBufferStride);
+            InitPoint = position;
+            InternalImage = internalImage;
+            ResultImage = resultImage;
+            ImageAccessor = new ImageAccessor((byte*)InternalImage.BackBuffer.ToPointer(), InternalImage.BackBufferStride);
         }
         public void CleanBubble()
         {
-            ParentImage.Lock();
+            InternalImage.Lock();
             unsafe
             {
                 ImageAccessor.Point = InitPoint;
 
-                while (ImageAccessor.X < ParentImage.Width && ImageAccessor.Red == 0)
+                while (ImageAccessor.X < InternalImage.Width && ImageAccessor.Red == 0)
                     ImageAccessor.X++;
                 if (Constants.MarkingColors.Where(x => x.G == ImageAccessor.Green).Any())
                 {
-                    ParentImage.Unlock();
+                    InternalImage.Unlock();
                     return;
                 }
 
@@ -63,8 +63,8 @@ namespace MangaCleaner
                     Size++;
                     if (Size > Constants.BUBBLE_MAX_SIZE)
                     {
-                        ParentImage.AddDirtyRect(BoundingBox);
-                        ParentImage.Unlock();
+                        InternalImage.AddDirtyRect(BoundingBox);
+                        InternalImage.Unlock();
                         return;
                     }
                     if (CheckInbounds())
@@ -73,17 +73,17 @@ namespace MangaCleaner
                         RegionBoundary.Dequeue();
                 }
                 DeleteText();
-                ParentImage.AddDirtyRect(BoundingBox);
-                ParentImage.Unlock();
+                InternalImage.AddDirtyRect(BoundingBox);
+                InternalImage.Unlock();
             }
 
         }
         private bool CheckInbounds()
         {
             return (2 < RegionBoundary.Peek().X
-                     && RegionBoundary.Peek().X < ParentImage.PixelWidth - 2
+                     && RegionBoundary.Peek().X < InternalImage.PixelWidth - 2
                      && 2 < RegionBoundary.Peek().Y
-                     && RegionBoundary.Peek().Y < ParentImage.PixelHeight - 2);
+                     && RegionBoundary.Peek().Y < InternalImage.PixelHeight - 2);
         }
 
         private void ExtendRegion(Point p)
@@ -146,13 +146,16 @@ namespace MangaCleaner
                         {
                             for (int j = 0; j <= i; j++)
                             {
-                                ImageAccessor.SetPixel((int)(p.X + j),(int) p.Y, Colors.White);
-                                ResultParser.SetPixel((int)(p.X + j), (int)p.Y, Colors.White);
+                                if(ImageAccessor.GetPixel((int)(p.X + j), (int)p.Y) == Colors.Black)
+                                {
+                                    ImageAccessor.SetPixel((int)(p.X + j),(int) p.Y, Colors.White);
+                                    ResultParser.SetPixel((int)(p.X + j), (int)p.Y, Colors.White);
+                                }
                             }
-                            i = ParentImage.PixelWidth;
+                            i = InternalImage.PixelWidth;
                         }
-                        if (p.X + i > ParentImage.PixelWidth - 3)
-                            i = ParentImage.PixelWidth;
+                        if (p.X + i > InternalImage.PixelWidth - 3)
+                            i = InternalImage.PixelWidth;
                     }
                 }
             }
@@ -167,35 +170,50 @@ namespace MangaCleaner
         /// <returns></returns>
         private bool CheckCorner(Point p)
         {
-            if(ImageAccessor.GetPixel(p) != Color.FromRgb(0, 0, 0)) { return true; }
-            bool up, down, right, UpRight, DownRight;
-            up = down = right = UpRight = DownRight = false;
+            if(ImageAccessor.GetPixel(p) != Colors.Black) return true;
+            bool up, down, right, UpRight, DownRight, UpLeft, DownLeft;
+            up = down = right = UpRight = DownRight = UpLeft = DownLeft = false;
             for (int i = 0; i < Constants.CORNER_CHECK_LIMIT; i++)
             {
-                if (p.X + i < ParentImage.PixelWidth && ImageAccessor.GetPixel(p.X + i, p.Y).G == MarkingColor.G)
+                if (p.X + i < InternalImage.PixelWidth && ImageAccessor.GetPixel(p.X + i, p.Y).G == MarkingColor.G)
                     right = true;
-                if (p.Y + i < ParentImage.PixelHeight && ImageAccessor.GetPixel(p.X, p.Y + i).G == MarkingColor.G)
+                if (p.Y + i < InternalImage.PixelHeight && ImageAccessor.GetPixel(p.X, p.Y + i).G == MarkingColor.G)
                     up = true;
                 if (p.Y - i > 0 && ImageAccessor.GetPixel(p.X, p.Y - i).G == MarkingColor.G)
                     down = true;
-                if (p.Y + i < ParentImage.PixelHeight && p.X + i < ParentImage.PixelWidth)
+                if (p.Y + i < InternalImage.PixelHeight && p.X + i < InternalImage.PixelWidth)
                 {
                     if (ImageAccessor.GetPixel(p.X + i, p.Y + i).G == MarkingColor.G)
                     {
                         UpRight = true;
                     }
                 }
-                if (p.Y - i > 0 && p.X + i < ParentImage.PixelWidth)
+                if (p.Y - i > 0 && p.X + i < InternalImage.PixelWidth)
                 {
                     if (ImageAccessor.GetPixel(p.X + i, p.Y - i).G == MarkingColor.G)
                     {
                         DownRight = true;
                     }
                 }
-                if (up && down && right && UpRight && DownRight)
+                if (p.Y - i > 0 && p.X - i > 0)
+                {
+                    if (ImageAccessor.GetPixel(p.X - i, p.Y - i).G == MarkingColor.G)
+                    {
+                        UpLeft = true;
+                    }
+                }
+                if (p.Y + i < InternalImage.PixelHeight && p.X - i > 0)
+                {
+                    if (ImageAccessor.GetPixel(p.X - i, p.Y + i).G == MarkingColor.G)
+                    {
+                        DownLeft = true;
+                    }
+                }
+                if (up && down && right && UpRight && DownRight && UpLeft && DownLeft)
                     return false;
             }
-            return (!(up && down && right && UpRight && DownRight));
+            return (!(up && down && right && UpRight && DownRight && UpLeft && DownLeft));
         }
+
     }
 }

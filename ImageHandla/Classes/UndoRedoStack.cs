@@ -5,17 +5,18 @@ namespace MangaCleaner
 {
     class UndoRedoStack
     {
-        private Stack<UndoRedoOperation> UndoStack;
-        private Stack<UndoRedoOperation> RedoStack;
+        private Stack<IUndoAble> UndoStack = new Stack<IUndoAble>();
+        private Stack<IUndoAble> RedoStack = new Stack<IUndoAble>();
 
-        public void Push(UndoRedoOperation operation)
+        public void Push(IUndoAble operation)
         {
             UndoStack.Push(operation);
         }
 
         public void Undo()
         {
-            if(UndoStack.Count <= 0) { return; }
+            if(UndoStack.Count <= 0)
+                return;
             var Operation = UndoStack.Pop();
             Operation.Undo();
             RedoStack.Push(Operation);
@@ -23,10 +24,17 @@ namespace MangaCleaner
 
         public void Redo()
         {
-            if (RedoStack.Count <= 0) { return; }
+            if (RedoStack.Count <= 0)
+                return;
             var Operation = RedoStack.Pop();
             Operation.Redo();
             UndoStack.Push(Operation);
+        }
+
+        public void Clear()
+        {
+            UndoStack.Clear();
+            RedoStack.Clear();
         }
 
     }

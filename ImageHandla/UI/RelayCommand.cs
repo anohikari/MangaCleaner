@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace MangaCleaner
+namespace MangaCleaner.UI
 {
     public class RelayCommand : ICommand
     {

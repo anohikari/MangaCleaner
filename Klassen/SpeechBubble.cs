@@ -104,8 +104,7 @@ namespace ImageHandler.Klassen
             }
 
         }
-        List<Point> GetAdjacentPixels
-            (Point p)
+        List<Point> GetAdjacentPixels(Point p)
         {
             List<Point> Neighbours = new List<Point>
             {
