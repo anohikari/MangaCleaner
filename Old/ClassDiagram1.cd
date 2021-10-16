@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ImageHandler.Cleaner">
+    <Position X="3.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAACAAAAAAAACAAAACAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>Forms\MainWindow.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="ucImageHandler" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ImageHandler.Constants">
+    <Position X="0.75" Y="3.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAIABAEAIAAgAAAAAAAAAAAABACAAAAA=</HashCode>
+      <FileName>Klassen\Constants.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ImageHandler.ImageBuffer">
+    <Position X="13" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIkIAAAAAMAAAAAAABAAIAAAAAAAAAEEAAAAAEACE=</HashCode>
+      <FileName>Klassen\ImageBuffer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="ImageHandler" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ImageHandler.ImageHandler">
+    <Position X="10.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAABABIEAAQABAAAAAAAAAAEAAAABCAACAAAAAAE=</HashCode>
+      <FileName>Klassen\ImageHandler.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ImageHandler.LockBitmap">
+    <Position X="13" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABALAABAAAKAIAAAABAEAAAAAAAAAgAAAAAAgAAAA=</HashCode>
+      <FileName>Klassen\LockBitmap.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ImageHandler.Program">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>Klassen\Main.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ImageHandler.UcImageHandler">
+    <Position X="6.75" Y="0.5" Width="2" />
+    <NestedTypes>
+      <Delegate Name="ImageHandler.UcImageHandler.ChangeBufferlabel" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>UserControls\UcImageHandler.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>TBACOAAAaqAAICIAAQCAQAhCAoANC0AFAAAAAQAAEBI=</HashCode>
+      <FileName>UserControls\UcImageHandler.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="ImageHandler" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ImageHandler.Klassen.SpeechBubble">
+    <Position X="10.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAACAgAgQAAACAACQAQAAQAAAJCBAAAhAAAAAA=</HashCode>
+      <FileName>Klassen\SpeechBubble.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="ImageHandler" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="ImageHandler.Properties.Resources" Collapsed="true">
+    <Position X="0.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAABEAAAAQAAAAAAAAAAAAAAAIA=</HashCode>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ImageHandler.Properties.Settings">
+    <Position X="3.75" Y="3.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAAAAIAAAAAABAAgAAAAAAAAACAA=</HashCode>
+      <FileName>Settings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
