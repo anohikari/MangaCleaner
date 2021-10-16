@@ -3,9 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-/MangaCleaner/obj
-/MangaCleaner/bin
-/.vs
+MangaCleaner/obj
+MangaCleaner/bin
+.vs
 
 # User-specific files
 *.rsuser
