@@ -196,7 +196,9 @@ namespace MangaCleaner
 
         private async Task CallOCRAPI()
         {
-            var points = await FreeOCRWrapper.OCR(LastLoadedImagePath);
+            // Compresses image size to < 1MB
+            var compressedImage = await ImageCompression.CompressImageFile(LastLoadedImagePath, 1000000);
+            var points = await FreeOCRWrapper.OCR(compressedImage);
             foreach (var point in points)
             {
                 var newBubble = new SpeechBubble(currentImageInternal, currentImage, point);

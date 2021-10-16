@@ -10,31 +10,53 @@ using System.Windows.Media.Imaging;
 
 namespace MangaCleaner.Classes
 {
+    /* 
+     * If compression reduces image dimensions at some point, make sure that the coordinates after calling OCR are corrected for the original image.
+     */
     static class ImageCompression
     {
-        static async Task<FileStream> CompressImageFile(string file)
+        /// <summary>
+        /// Compresses an image with continually worse quality until, it's smaller than the target filesize.
+        /// If you read this and can come up with a cool, math-heavy way to compress to targetsize, change the implementation.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="allowedSize"></param>
+        /// <returns></returns>
+        internal static async Task<string> CompressImageFile(string file, double allowedSize)
         {
-            var tempFile = Path.GetTempFileName();
+            if (OriginalIsSmallEnough(file, allowedSize))
+                return file;
+            string tempFile = string.Empty;
+            FileStream result = null;
             var original = BitmapFrame.Create(new BitmapImage(new Uri(file)));
-            var encoder = new JpegBitmapEncoder();
-            var result = new FileStream(tempFile, FileMode.Create);
-            encoder.Frames.Add(BitmapFrame.Create(original));
-            encoder.Save(result);
-            return result;
+            JpegBitmapEncoder encoder;
+            var quality = 100;
+            while (result is null || result.Length > allowedSize)
+            {
+                if (!string.IsNullOrEmpty(tempFile))
+                {
+                    result.Close();
+                    File.Delete(tempFile);
+                }
+
+                encoder = new JpegBitmapEncoder()
+                {
+                    QualityLevel = quality
+                };
+                tempFile = Path.GetTempFileName();
+                result = File.Open(tempFile, FileMode.Open);
+                encoder.Frames.Add(BitmapFrame.Create(original));
+                encoder.Save(result);
+                quality -= 3;
+            }
+            result.Close();
+            return tempFile;
         }
 
-        static double BitsPerPixel(BitmapFrame bitmap, string sourceFile)
+        private static bool OriginalIsSmallEnough(string file, double allowedSize)
         {
-            var pixel = bitmap.Width * bitmap.Height;
-            var size = new FileInfo(sourceFile).Length;
-            return  size / pixel;
-        }
-
-        static Point NewFileFormat(BitmapFrame bitmap, string sourceFile, double targetImageSize = 1000000)
-        {
-            var currentFileSize = new FileInfo(sourceFile).Length;
-            var sizerReductionFactor = targetImageSize / currentFileSize;
-            return new Point(0, 0);
+            var originalFile = new FileInfo(file);
+            return originalFile.Length < allowedSize;
         }
     }
 }
