@@ -1,10 +1,9 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Media;
 
@@ -34,7 +33,7 @@ namespace MangaCleaner.Classes
 
             var response = await httpClient.PostAsync("https://api.ocr.space/Parse/Image", form);
             var strContent = await response.Content.ReadAsStringAsync();
-            var ocrResult = JsonConvert.DeserializeObject<Root>(strContent);
+            var ocrResult = JsonSerializer.Deserialize<Root>(strContent);
 
             var result = new PointCollection();
             foreach (var word in ocrResult.ParsedResults.
