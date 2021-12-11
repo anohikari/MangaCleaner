@@ -2,7 +2,7 @@
 This Programm allows the user to quickly go through a folder of manga/comic images and remove any speechbubbles with a simple click
 
 A precompiled winows executable can be found here:
-https://drive.google.com/file/d/1yYglbg7Sl3lfIhE-o6kIGG70IbNhBmCi/view?usp=sharing
+https://drive.google.com/file/d/1QcjGlOYcBDo8QLwwvLWVMrQxUftCczCR/view?usp=sharing
 
 ![Here is an example screenshot:](https://i.imgur.com/t9TMOa4.png)
 Simply click on a speecbubble to delete it. 
